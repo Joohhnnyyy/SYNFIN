@@ -38,14 +38,15 @@ supabase/
 README.md
 *.md
 
-# Config files
+# Config files (Do NOT ignore build-critical configs)
 .eslintrc*
 .prettierrc*
-tsconfig*.json
-vite.config.ts
-tailwind.config.ts
-postcss.config.js
-components.json
+# Allow tsconfig and Vite configs to be uploaded for cloud builds
+# tsconfig*.json
+# vite.config.ts
+# tailwind.config.ts
+# postcss.config.js
+# components.json
 
 # Lock files (keep package-lock.json for consistent builds)
 bun.lockb
