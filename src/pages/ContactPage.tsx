@@ -44,9 +44,9 @@ const ContactPage = () => {
     {
       icon: Mail,
       title: "Email",
-      value: "info@savify.iq",
-                href: "mailto:info@savify.iq",
-      description: "Financial coaching inquiries"
+      value: "info@synfin.ai",
+      href: "mailto:info@synfin.ai",
+      description: "General inquiries"
     },
     {
       icon: MapPin,

@@ -1,5 +1,11 @@
 // Financial AI System API Service
-const API_BASE = 'http://localhost:8000';
+// Dev uses Vite proxy (/api) if no env is provided; prod prefers env (VITE_API_URL or VITE_BACKEND_URL) then Render
+const ENV_API_URL = (import.meta.env?.VITE_API_URL as string) || (import.meta.env?.VITE_BACKEND_URL as string) || '';
+const API_BASE = import.meta.env?.DEV
+  ? (ENV_API_URL || '/api')
+  : (ENV_API_URL || 'https://savify-backend.onrender.com');
+// Optional backend prefix (e.g., "/loan" or "/api/v1") to match deployment mount paths
+const API_PREFIX = ((import.meta.env?.VITE_API_PREFIX as string) || '').trim();
 
 // Types based on the backend models
 export interface ExpenditureEntry {
@@ -22,6 +28,22 @@ export interface ChatResponse {
   data?: any;
 }
 
+// Loan Advisor API shapes
+export interface LoanChatRequest {
+  customer_id: string;
+  message: string;
+  application_id?: string;
+  data_update?: Record<string, any>;
+}
+
+export interface LoanChatResponse {
+  application_id: string;
+  agent_name: string;
+  message: string;
+  status: string;
+  action_required?: string;
+}
+
 export interface FullAnalysisRequest {
   entries: ExpenditureEntry[];
   user_context?: string;
@@ -30,15 +52,18 @@ export interface FullAnalysisRequest {
 // API Service Class
 export class FinancialApiService {
   private baseUrl: string;
+  private prefix: string;
 
   constructor(baseUrl: string = API_BASE) {
     this.baseUrl = baseUrl;
+    this.prefix = API_PREFIX ? `/${API_PREFIX.replace(/^\/|\/$/g, '')}` : '';
   }
 
   // Generic API call method with error handling
   private async apiCall<T>(endpoint: string, data: any): Promise<T> {
     try {
-      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      const url = `${this.baseUrl.replace(/\/$/, '')}${endpoint}`;
+      const response = await fetch(url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,8 +72,17 @@ export class FinancialApiService {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.detail || `HTTP ${response.status}: ${response.statusText}`);
+        // Prefer text to surface HTML or plain errors; fallback to JSON
+        const rawText = await response.text().catch(() => '');
+        let detail = '';
+        try {
+          const json = JSON.parse(rawText);
+          detail = json.detail || '';
+        } catch (_) {
+          detail = rawText || '';
+        }
+        const pathInfo = ` (endpoint: ${endpoint})`;
+        throw new Error(detail || `HTTP ${response.status}: ${response.statusText}${pathInfo}`);
       }
 
       return await response.json();
@@ -58,19 +92,86 @@ export class FinancialApiService {
     }
   }
 
+  // Attempt multiple POST endpoints until one succeeds
+  private async postWithFallback<T>(endpoints: string[], data: any): Promise<T> {
+    const errors: string[] = [];
+    for (const ep of endpoints) {
+      try {
+        return await this.apiCall<T>(ep, data);
+      } catch (e: any) {
+        errors.push(e?.message || `Failed on ${ep}`);
+        // If not 404, don't continue; rethrow immediately for non-route issues
+        if (!/404|Not Found/i.test(e?.message || '')) {
+          throw e;
+        }
+      }
+    }
+    throw new Error(`All endpoints failed: ${errors.join(' | ')}`);
+  }
+
+  // Build endpoint variants respecting optional prefix and dev proxy
+  private resolvePaths(path: string, includeApiVariant: boolean = true): string[] {
+    const cleanPath = path.startsWith('/') ? path : `/${path}`;
+    const baseIsApiProxy = this.baseUrl.replace(/\/$/, '') === '/api';
+    const variants: string[] = [];
+    if (this.prefix) variants.push(`${this.prefix}${cleanPath}`);
+    variants.push(cleanPath);
+    if (includeApiVariant && !baseIsApiProxy) variants.push(`/api${cleanPath}`);
+    return variants;
+  }
+
   // Main chat endpoint - handles all query types intelligently
   async chat(request: ChatRequest): Promise<ChatResponse> {
-    return this.apiCall<ChatResponse>('/chat', request);
+    // Try variants in case backend is mounted with a prefix
+    return this.postWithFallback<ChatResponse>(this.resolvePaths('/chat'), request);
+  }
+
+  // Loan advisor chat endpoint (FastAPI)
+  async loanChat(request: LoanChatRequest): Promise<LoanChatResponse> {
+    // Loan advisor chat uses /chat under the mounted app; include prefix variants
+    return this.postWithFallback<LoanChatResponse>(this.resolvePaths('/chat'), request);
+  }
+
+  // Get application details
+  async getApplication(appId: string): Promise<any> {
+    const base = this.baseUrl.replace(/\/$/, '');
+    const endpoints = this.resolvePaths(`/application/${appId}`, true);
+    const errors: string[] = [];
+    for (const ep of endpoints) {
+      const url = `${base}${ep}`;
+      const res = await fetch(url);
+      if (res.ok) return res.json();
+      const rawText = await res.text().catch(() => '');
+      errors.push(rawText || `HTTP ${res.status}: ${res.statusText} (endpoint: ${ep})`);
+      if (!/404|Not Found/i.test(rawText || '')) break; // stop on non-404
+    }
+    throw new Error(`All endpoints failed: ${errors.join(' | ')}`);
+  }
+
+  // Fetch sanction letter PDF as Blob
+  async getSanctionLetter(appId: string): Promise<Blob> {
+    const base = this.baseUrl.replace(/\/$/, '');
+    const endpoints = this.resolvePaths(`/sanction-letter/${appId}`, true);
+    const errors: string[] = [];
+    for (const ep of endpoints) {
+      const url = `${base}${ep}`;
+      const res = await fetch(url);
+      if (res.ok) return res.blob();
+      const text = await res.text().catch(() => '');
+      errors.push(text || `HTTP ${res.status}: ${res.statusText} (endpoint: ${ep})`);
+      if (!/404|Not Found/i.test(text || '')) break; // stop on non-404
+    }
+    throw new Error(`All endpoints failed: ${errors.join(' | ')}`);
   }
 
   // Direct expenditure analysis
   async analyzeExpenditure(entries: ExpenditureEntry[]): Promise<ChatResponse> {
-    return this.apiCall<ChatResponse>('/analyze-expenditure', entries);
+    return this.postWithFallback<ChatResponse>(this.resolvePaths('/analyze-expenditure'), entries);
   }
 
   // Complete analysis pipeline
   async fullAnalysis(request: FullAnalysisRequest): Promise<ChatResponse> {
-    return this.apiCall<ChatResponse>('/full-analysis', request);
+    return this.postWithFallback<ChatResponse>(this.resolvePaths('/full-analysis'), request);
   }
 
   // Convenience methods for specific query types
@@ -104,10 +205,18 @@ export class FinancialApiService {
   }
 
   // Health check
-  async healthCheck(): Promise<{ message: string }> {
+  async healthCheck(): Promise<{ status?: string; service?: string; message?: string }> {
     try {
-      const response = await fetch(`${this.baseUrl}/`);
-      return await response.json();
+      const base = this.baseUrl.replace(/\/$/, '');
+      const endpoints = this.resolvePaths('/health');
+      let lastErrorText = '';
+      for (const ep of endpoints) {
+        const response = await fetch(`${base}${ep}`);
+        if (response.ok) return await response.json();
+        lastErrorText = await response.text().catch(() => '');
+        if (!/404|Not Found/i.test(lastErrorText || '')) break; // stop on non-404
+      }
+      throw new Error(lastErrorText || 'Backend service is not available');
     } catch (error) {
       throw new Error('Backend service is not available');
     }

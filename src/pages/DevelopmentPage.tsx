@@ -16,7 +16,8 @@ import {
   Zap,
   Building,
   Rocket,
-  Shield
+  Shield,
+  FileText
 } from "lucide-react";
 
 const DevelopmentPage = () => {
@@ -35,71 +36,71 @@ const DevelopmentPage = () => {
 
   const developmentAreas = [
     {
-      icon: TrendingUp,
-      title: "Financial Pattern Analysis",
-      description: "Advanced AI algorithms analyze your spending, income, and financial behaviors to identify patterns and opportunities for improvement.",
-      features: ["Income pattern recognition", "Spending behavior analysis", "Financial trend identification", "Risk pattern detection"]
-    },
-    {
-      icon: Target,
-      title: "Personalized Goal Setting",
-      description: "AI-powered goal setting that adapts to your unique financial situation and irregular income patterns.",
-      features: ["Smart goal recommendations", "Adaptive milestone planning", "Progress tracking optimization", "Resource allocation guidance"]
-    },
-    {
       icon: Users,
-      title: "Behavioral Learning Engine",
-      description: "Our AI learns from your financial decisions and behaviors to provide increasingly personalized recommendations.",
-      features: ["Decision pattern analysis", "Habit formation tracking", "Personalized coaching adaptation", "Continuous learning optimization"]
+      title: "Master Agent",
+      description: "Initial customer interaction and intent capture. Welcomes users and routes them into the loan flow.",
+      features: ["Greeting and onboarding", "Interest generation", "Intent understanding", "Flow handoff to Sales"]
+    },
+    {
+      icon: TrendingUp,
+      title: "Sales Agent",
+      description: "Discusses loan amount, rate, and tenure; calculates EMI and presents payment schedules.",
+      features: ["Loan requirement discovery", "EMI calculation", "Tenure and rate discussion", "Schedule preview"]
+    },
+    {
+      icon: Shield,
+      title: "Verification Agent",
+      description: "Validates PAN/Aadhaar via mock KYC APIs, performs fraud checks and document intake.",
+      features: ["PAN/Aadhaar validation", "Mock KYC API integration", "Document collection", "Fraud signals"]
     },
     {
       icon: Brain,
-      title: "AI-Powered Insights",
-      description: "Intelligent analysis of your financial data to provide actionable insights and predictive recommendations.",
-      features: ["Predictive financial modeling", "Risk assessment algorithms", "Opportunity identification", "Automated financial health scoring"]
+      title: "Underwriting Agent",
+      description: "Fetches credit score, sets pre-approved limits, and runs risk assessment.",
+      features: ["Credit score retrieval", "Limit setting", "Risk analysis", "Policy checks"]
     },
     {
-      icon: BarChart3,
-      title: "Real-Time Monitoring",
-      description: "Continuous monitoring of your financial health with real-time alerts and recommendations.",
-      features: ["Smart financial tracking", "Automated alert systems", "Performance analytics", "Continuous optimization suggestions"]
+      icon: CheckCircle,
+      title: "Eligibility Agent",
+      description: "Makes approval/rejection decisions based on score, policy, and requested amount.",
+      features: ["Threshold evaluation", "Approval decisioning", "Rejection rationale", "Next-step guidance"]
     },
     {
-      icon: Lightbulb,
-      title: "Innovation & Adaptation",
-      description: "Stay ahead of market trends and continuously evolve your expansion strategy.",
-      features: ["Trend analysis and forecasting", "Product/service adaptation", "Technology integration", "Innovation opportunity identification"]
+      icon: FileText,
+      title: "PDF Agent",
+      description: "Generates sanction letters with loan details and shareable, branded PDF output.",
+      features: ["Sanction letter generation", "Template rendering", "Shareable PDF", "Audit trail"]
     }
   ];
 
   const benefits = [
     {
-      icon: Rocket,
-      title: "Accelerated Growth",
-      description: "Fast-track your financial progress with AI-powered insights and recommendations"
+      icon: Zap,
+      title: "Faster Approvals",
+      description: "Reduce time-to-decision with parallelized, agent-driven processing"
     },
     {
       icon: Shield,
-      title: "Risk Management",
-      description: "Proactive identification and mitigation of financial risks through intelligent monitoring"
+      title: "Secure & Compliant",
+      description: "KYC validation and audit trails ensure trust and regulatory alignment"
+    },
+    {
+      icon: Brain,
+      title: "Explainable Decisions",
+      description: "Transparent eligibility outcomes with rationale and policy checks"
     },
     {
       icon: Building,
-      title: "Sustainable Habits",
-      description: "Build lasting financial habits with personalized coaching and behavioral insights"
-    },
-    {
-      icon: Zap,
-      title: "Smart Optimization",
-      description: "Optimize your financial decisions with data-driven AI recommendations"
+      title: "Scalable & Modular",
+      description: "MCP orchestration lets you add or swap agents easily"
     }
   ];
 
   const stats = [
-    { number: "10K+", label: "Users Coached" },
-    { number: "85%", label: "Improved Savings" },
-    { number: "24/7", label: "AI Monitoring" },
-    { number: "99%", label: "Data Security" }
+    { number: "5K+", label: "Loans Processed" },
+    { number: "< 2m", label: "Approval Speed" },
+    { number: "100%", label: "KYC Coverage" },
+    { number: "99.9%", label: "Gateway Uptime" }
   ];
 
   return (
@@ -116,20 +117,20 @@ const DevelopmentPage = () => {
         
         <div className="container mx-auto px-6 relative z-10">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight tracking-wider animate-fade-in-up">
-            <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">development</span>
+            <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">architecture</span>
           </h1>
           
           <h2 className="text-3xl md:text-4xl font-semibold mb-8 text-muted-foreground animate-fade-in-up delay-200">
-            Building Your Financial Future Through AI Development
+            MCP + FastAPI Orchestration for AI-Driven Loan Processing
           </h2>
           
           <p className="text-xl text-muted-foreground max-w-3xl leading-relaxed mb-12 animate-fade-in-up delay-400">
-            Transform your financial wellness journey with our comprehensive AI-powered development platform. We provide the intelligent insights, personalized coaching, and adaptive learning needed to achieve lasting financial success.
+            An end-to-end multi-agent workflow: customers chat with our Master Agent, Sales calculates EMI, Verification runs KYC, Underwriting fetches credit scores, Eligibility decides, and PDF Agent issues the sanction letter.
           </p>
 
           <div className="animate-fade-in-up delay-600">
             <LiquidButton size="lg" className="font-medium" onClick={handleStartJourney}>
-              Start Your Financial Journey
+              Start Loan Application
               <ArrowRight className="w-5 h-5 ml-2" />
             </LiquidButton>
           </div>
@@ -164,9 +165,9 @@ const DevelopmentPage = () => {
         
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16 animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Our Development Focus Areas</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Specialized AI Agents</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              We cover every aspect of business development to ensure your expansion is comprehensive, strategic, and successful.
+              MCP-orchestrated agents collaborate to process loans efficiently, securely, and transparently.
             </p>
           </div>
 
@@ -200,7 +201,7 @@ const DevelopmentPage = () => {
         </div>
       </section>
 
-      {/* AI System Architecture Section */}
+      {/* MCP + FastAPI Architecture Section */}
       <section className="py-20 bg-gradient-to-br from-background via-background to-muted/20 relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-30">
@@ -210,9 +211,9 @@ const DevelopmentPage = () => {
         
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16 animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">AI System Architecture</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">MCP + FastAPI Architecture</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Our intelligent multi-agent system works collaboratively to provide comprehensive financial guidance and personalized recommendations.
+              Agents communicate via MCP with a FastAPI gateway exposing REST endpoints for CRM and back-office integration. The beam demo illustrates data flow between agents.
             </p>
           </div>
 
@@ -226,9 +227,9 @@ const DevelopmentPage = () => {
       <section className="py-20 bg-background">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16 animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Why Choose Our Development Services?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Why Choose Our AI Loan System?</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Our comprehensive approach ensures your business development initiatives deliver measurable results and sustainable growth.
+              A robust, explainable, and secure pipeline from chat to sanction letter, ready to integrate with your stack.
             </p>
           </div>
 
@@ -253,7 +254,7 @@ const DevelopmentPage = () => {
         </div>
       </section>
 
-      {/* Process Section */}
+      {/* Workflow Section */}
       <section className="py-20 bg-gradient-to-br from-primary/5 to-background relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 opacity-20">
@@ -263,9 +264,9 @@ const DevelopmentPage = () => {
         
         <div className="container mx-auto px-6 relative z-10">
           <div className="text-center mb-16 animate-fade-in-up">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Our Development Process</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">Workflow: From Chat to Sanction Letter</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              A structured, proven approach that transforms your expansion goals into actionable strategies and measurable results.
+              A streamlined pipeline across agents to deliver fast, secure, and transparent loan decisions.
             </p>
           </div>
 
@@ -274,18 +275,33 @@ const DevelopmentPage = () => {
               {[
                 {
                   step: "01",
-                  title: "Discovery & Analysis",
-                  description: "Deep dive into your business goals, market opportunities, and expansion requirements."
+                  title: "Chat & Interest (Master Agent)",
+                  description: "Welcome users, capture intent, and initiate the loan flow."
                 },
                 {
                   step: "02",
-                  title: "Strategy Development",
-                  description: "Create comprehensive development plans tailored to your specific market and objectives."
+                  title: "Loan Discussion & EMI (Sales)",
+                  description: "Gather loan details, compute EMI, and present schedules."
                 },
                 {
                   step: "03",
-                  title: "Implementation & Growth",
-                  description: "Execute strategies with ongoing support, monitoring, and optimization for sustained success."
+                  title: "KYC Verification (Verification)",
+                  description: "Validate PAN/Aadhaar via mock APIs and collect documents."
+                },
+                {
+                  step: "04",
+                  title: "Underwriting & Credit Score",
+                  description: "Fetch scores, set limits, and assess risk and policy."
+                },
+                {
+                  step: "05",
+                  title: "Eligibility Decision",
+                  description: "Approve or reject based on score, amount, and policies."
+                },
+                {
+                  step: "06",
+                  title: "Sanction Letter (PDF Agent)",
+                  description: "Generate and deliver the sanction letter as a shareable PDF."
                 }
               ].map((phase, index) => (
                 <div 
@@ -310,21 +326,21 @@ const DevelopmentPage = () => {
         <div className="container mx-auto px-6 text-center">
           <div className="animate-fade-in-up">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              Ready to Accelerate Your Growth?
+              Ready to Process Loans with AI?
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Let's discuss how our development services can transform your expansion vision into a successful reality.
+              Get a production-ready, multi-agent pipeline integrated via FastAPI. Start now.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <LiquidButton size="lg" asChild className="font-medium">
-                <a href="/contact" className="flex items-center gap-2">
-                  Start Your Development Journey
+                <a href="/login" className="flex items-center gap-2">
+                  Start Loan Application
                   <ArrowRight className="w-5 h-5" />
                 </a>
               </LiquidButton>
               <LiquidButton size="lg" variant="outline" asChild className="font-medium">
                 <a href="/about" className="flex items-center gap-2">
-                  Learn More About Us
+                  Explore Architecture
                   <Brain className="w-5 h-5" />
                 </a>
               </LiquidButton>

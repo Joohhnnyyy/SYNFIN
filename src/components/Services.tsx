@@ -3,136 +3,112 @@ import { useState, createElement } from "react";
 
 const services = [
   {
-    title: "Smart Spending Analysis",
-    description: "AI continuously monitors your spending patterns and identifies opportunities to save money without sacrificing your lifestyle.",
-    icon: PieChart,
-    learnMore: {
-      overview: "Our advanced AI algorithms analyze every transaction to understand your unique spending behavior and identify personalized savings opportunities.",
-      features: [
-        "Real-time transaction categorization and analysis",
-        "Personalized spending pattern recognition",
-        "Smart savings recommendations without lifestyle compromise",
-        "Subscription and recurring payment optimization",
-        "Seasonal spending trend analysis",
-        "Merchant-specific insights and alternatives"
-      ],
-      benefits: [
-        "Save 15-30% on monthly expenses without changing your lifestyle",
-        "Identify forgotten subscriptions and unnecessary charges",
-        "Get personalized recommendations for better deals",
-        "Track spending efficiency across different categories"
-      ]
-    }
-  },
-  {
-    title: "Personalized Investment Guidance",
-    description: "Get investment recommendations tailored to your income patterns, risk tolerance, and financial goals - perfect for irregular earners.",
-    icon: TrendingUp,
-    learnMore: {
-      overview: "Designed specifically for freelancers, gig workers, and those with variable income, our AI creates investment strategies that adapt to your unique financial situation.",
-      features: [
-        "Income volatility-adjusted portfolio recommendations",
-        "Risk tolerance assessment based on irregular earnings",
-        "Dollar-cost averaging strategies for variable income",
-        "Tax-efficient investment planning for freelancers",
-        "Emergency fund integration with investment goals",
-        "Market timing guidance for irregular income patterns"
-      ],
-      benefits: [
-        "Build wealth even with unpredictable income",
-        "Optimize investments for tax efficiency",
-        "Balance growth with financial security",
-        "Access professional-grade investment strategies"
-      ]
-    }
-  },
-  {
-    title: "Risk Detection & Alerts",
-    description: "Proactive monitoring identifies potential financial risks and sends timely alerts to help you avoid overspending or missed opportunities.",
-    icon: AlertTriangle,
-    learnMore: {
-      overview: "Stay ahead of financial challenges with intelligent monitoring that learns your patterns and predicts potential issues before they become problems.",
-      features: [
-        "Predictive cash flow analysis and warnings",
-        "Unusual spending pattern detection",
-        "Bill due date reminders and payment optimization",
-        "Credit score monitoring and improvement alerts",
-        "Market volatility impact assessments",
-        "Identity theft and fraud protection monitoring"
-      ],
-      benefits: [
-        "Prevent overdrafts and late payment fees",
-        "Protect your credit score proactively",
-        "Avoid financial stress through early warnings",
-        "Maintain financial stability during income fluctuations"
-      ]
-    }
-  },
-  {
-    title: "Goal-Based Financial Planning",
-    description: "Set and track financial goals with AI-powered strategies that adapt to your changing income and life circumstances.",
-    icon: Target,
-    learnMore: {
-      overview: "Transform your financial dreams into achievable milestones with adaptive planning that evolves with your changing circumstances and income patterns.",
-      features: [
-        "Adaptive goal setting for irregular income",
-        "Milestone tracking with flexible timelines",
-        "Priority-based goal management",
-        "Income-adjusted savings strategies",
-        "Progress visualization and motivation tools",
-        "Goal interconnection and optimization analysis"
-      ],
-      benefits: [
-        "Achieve financial goals despite income variability",
-        "Stay motivated with clear progress tracking",
-        "Optimize multiple goals simultaneously",
-        "Adapt plans as life circumstances change"
-      ]
-    }
-  },
-  {
-    title: "Data Integration Hub",
-    description: "Seamlessly connect bank accounts, gig platforms, and financial apps for a complete view of your financial landscape.",
+    title: "Master Agent",
+    description: "Welcomes customers, understands intent, and initiates the loan process via chat.",
     icon: Brain,
     learnMore: {
-      overview: "Unify your entire financial ecosystem in one secure platform, automatically syncing data from banks, gig platforms, investment accounts, and financial apps.",
+      overview: "Acts as the primary interface, guiding users into the loan journey.",
       features: [
-        "Bank-level security with 256-bit encryption",
-        "Automatic transaction categorization across all accounts",
-        "Gig platform income tracking (Uber, DoorDash, Fiverr, etc.)",
-        "Investment account portfolio monitoring",
-        "Credit card and loan balance tracking",
-        "Real-time net worth calculations"
+        "Conversation orchestration and intent detection",
+        "Customer onboarding and data capture",
+        "Seamless handoff to Sales Agent",
       ],
       benefits: [
-        "Complete financial picture in one dashboard",
-        "Eliminate manual data entry and tracking",
-        "Secure, read-only access to your accounts",
-        "Comprehensive insights across all financial platforms"
-      ]
-    }
+        "Friendly entry point for customers",
+        "Clear guidance from first message",
+        "Lower drop-off with conversational UX",
+      ],
+    },
   },
   {
-    title: "Financial Security Coaching",
-    description: "Build emergency funds, improve credit scores, and create financial safety nets designed for modern work patterns.",
-    icon: Shield,
+    title: "Sales Agent",
+    description: "Discusses loan amount, rate, tenure and computes EMI in real-time.",
+    icon: TrendingUp,
     learnMore: {
-      overview: "Develop robust financial security tailored to the unique challenges of irregular income, with personalized strategies for building wealth and protecting your future.",
+      overview: "Captures loan preferences and provides instant EMI calculations.",
       features: [
-        "Variable income emergency fund strategies",
-        "Credit score improvement action plans",
-        "Insurance needs assessment and optimization",
-        "Debt payoff strategies for irregular earners",
-        "Retirement planning for freelancers and gig workers",
-        "Tax planning and quarterly payment strategies"
+        "Loan amount, rate, tenure capture",
+        "EMI computation and scenarios",
+        "Offer presentation and adjustments",
       ],
       benefits: [
-        "Build financial resilience against income volatility",
-        "Improve creditworthiness and access to better rates",
-        "Create comprehensive financial safety nets",
-        "Plan for long-term financial independence"
-      ]
-    }
+        "Transparent repayment insights",
+        "Fast iteration on loan terms",
+        "Improved decision confidence",
+      ],
+    },
+  },
+  {
+    title: "Verification Agent",
+    description: "Validates PAN/Aadhaar via mock KYC APIs for compliance.",
+    icon: Shield,
+    learnMore: {
+      overview: "Performs identity verification using simulated KYC endpoints.",
+      features: [
+        "PAN and Aadhaar validation",
+        "Mock API integration",
+        "KYC status reporting",
+      ],
+      benefits: [
+        "Frictionless identity checks",
+        "Compliance-ready workflows",
+        "Reduced manual review",
+      ],
+    },
+  },
+  {
+    title: "Underwriting Agent",
+    description: "Fetches credit score and sets pre-approved limits.",
+    icon: PieChart,
+    learnMore: {
+      overview: "Assesses creditworthiness and proposes safe lending thresholds.",
+      features: [
+        "Credit score retrieval",
+        "Risk assessment logic",
+        "Pre-approved limit calculation",
+      ],
+      benefits: [
+        "Responsible lending decisions",
+        "Aligned risk and exposure",
+        "Faster underwriting cycles",
+      ],
+    },
+  },
+  {
+    title: "Eligibility Agent",
+    description: "Makes approval/rejection decisions based on policy and inputs.",
+    icon: Target,
+    learnMore: {
+      overview: "Applies decision rules combining credit, loan terms, and KYC results.",
+      features: [
+        "Policy rules evaluation",
+        "Edge case handling",
+        "Decision explanation",
+      ],
+      benefits: [
+        "Clear approvals or rejections",
+        "Audit-friendly decisions",
+        "Consistency across cases",
+      ],
+    },
+  },
+  {
+    title: "PDF Agent",
+    description: "Generates sanction letters for approved loans as final output.",
+    icon: AlertTriangle,
+    learnMore: {
+      overview: "Creates formal sanction documentation from approved case data.",
+      features: [
+        "Dynamic PDF generation",
+        "Template-driven letter formatting",
+        "Delivery and archival hooks",
+      ],
+      benefits: [
+        "Professional documents instantly",
+        "Reduced operational workload",
+        "End-to-end automation",
+      ],
+    },
   },
 ];
 
@@ -161,14 +137,14 @@ export const Services = () => {
           <div className="text-center mb-20 animate-fade-in-up">
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium border border-primary/20 mb-6">
               <Brain className="w-4 h-4" />
-              AI Financial Features
+              AI Loan Processing Agents
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              Intelligent Financial Coaching{" "}
-              <span className="text-primary">That Learns You</span>
+              Specialized Agents Orchestrated via{" "}
+              <span className="text-primary">MCP</span>
             </h2>
             <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Our AI adapts to your unique financial patterns, whether you're a freelancer, gig worker, or have irregular income streams.
+              Exposed through FastAPI, this multi-agent workflow runs from customer chat to sanction letter generation.
             </p>
           </div>
 

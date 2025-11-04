@@ -7,6 +7,15 @@ export default defineConfig({
   server: {
     host: "::",
     port: 8080,
+    proxy: {
+      "/api": {
+        // Forward dev API calls to the provided backend URL
+        target: "https://ai-loan-advisor-zeta.vercel.app",
+        changeOrigin: true,
+        secure: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+    },
   },
   plugins: [react()],
   build: {

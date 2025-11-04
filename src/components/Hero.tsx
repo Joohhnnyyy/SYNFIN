@@ -41,19 +41,19 @@ export const Hero = () => {
           <div className="mb-6 animate-fade-in-up">
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white/90 text-sm font-medium border border-white/20">
               <Brain className="w-4 h-4 animate-pulse" />
-              AI-Powered Financial Coaching
+              AI-Driven Loan Processing
             </span>
           </div>
           
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-[0.9] tracking-tight animate-fade-in-up delay-200">
-            Smart Financial{" "}
+            Synfin{" "}
             <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-              Coaching for Everyone
+              AI Loan Processing
             </span>
           </h1>
           
           <p className="text-lg md:text-xl text-white/90 mb-12 max-w-2xl leading-relaxed animate-fade-in-up delay-400">
-            AI-powered financial coaching tailored to your unique income patterns and lifestyle.
+            Multi-agent MCP + FastAPI workflow from chat to sanction letter.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up delay-600">
@@ -65,7 +65,7 @@ export const Hero = () => {
             >
               <span className="flex items-center gap-3">
                 <TrendingUp className="w-5 h-5 group-hover:animate-pulse" />
-                START YOUR FINANCIAL JOURNEY
+                START LOAN APPLICATION
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </span>
             </LiquidButton>
@@ -79,7 +79,7 @@ export const Hero = () => {
                 navigate('/development');
               }}
             >
-              See How It Works
+              See Workflow
             </LiquidButton>
           </div>
         </div>

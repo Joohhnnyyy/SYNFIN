@@ -93,6 +93,23 @@ Savify is a comprehensive web application that provides intelligent financial co
    VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
    ```
 
+   Backend API configuration (optional but recommended for production/dev alignment):
+   ```env
+   # Prefer setting one of these to the backend base URL
+   VITE_API_URL=https://your-backend.example.com
+   # or
+   VITE_BACKEND_URL=https://your-backend.example.com
+
+   # If your backend is mounted under a path prefix (e.g., behind a reverse proxy):
+   # Examples: "/loan", "/api/v1" (do not include trailing slash)
+   VITE_API_PREFIX=/loan
+   ```
+
+   Notes:
+   - In development, if `VITE_API_URL`/`VITE_BACKEND_URL` are not set, the app uses Vite’s proxy at `/api`.
+   - `VITE_API_PREFIX` helps when your FastAPI app is served under a subpath; the frontend will try both prefixed and non-prefixed endpoints to avoid 404s.
+   - If you see `Not Found` for all endpoints, verify your backend base URL and any mount prefix, then set `VITE_API_URL` and `VITE_API_PREFIX` accordingly.
+
 4. **Start the development server**
    ```bash
    npm run dev

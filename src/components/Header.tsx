@@ -17,6 +17,7 @@ const navigation = [
   { name: "About", href: "/about" },
   { name: "Philosophy", href: "/philosophy" },
   { name: "Development", href: "/development" },
+  { name: "Chat", href: "/chat" },
   { name: "Dashboard", href: "/dashboard" },
   { name: "Contact", href: "/contact" },
 ];
@@ -41,7 +42,7 @@ export const Header = () => {
             <span className="w-8 h-8 rounded-full border-4 flex items-center justify-center" style={{ borderColor: 'rgb(134.9, 68.1, 79.1)' }}>
             </span>
             <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-              SAVIFY
+              SYNFIN
             </span>
           </div>
           

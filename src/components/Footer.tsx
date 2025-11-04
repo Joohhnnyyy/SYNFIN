@@ -14,17 +14,17 @@ export const Footer = () => {
           {/* Brand Section */}
           <div className="md:col-span-2 animate-fade-in-up">
             <div className="text-3xl font-bold mb-6 bg-gradient-to-r from-white to-white/90 bg-clip-text text-transparent">
-              Savify
+              Synfin
             </div>
             <p className="text-primary-foreground/80 leading-relaxed mb-6 max-w-md">
-              Your trusted partner for global market expansion. We guide companies into new markets with clear steps, reliable partners, and measurable results.
+              Your trusted partner for intelligent financial coaching and AI-powered insights.
             </p>
             
             {/* Contact Info */}
             <div className="space-y-3">
               <div className="flex items-center gap-3 text-primary-foreground/80 hover:text-white transition-colors">
                 <Mail className="w-4 h-4" />
-                <span className="text-sm">contact@savify.com</span>
+                <span className="text-sm">contact@synfin.com</span>
               </div>
               <div className="flex items-center gap-3 text-primary-foreground/80 hover:text-white transition-colors">
                 <Phone className="w-4 h-4" />

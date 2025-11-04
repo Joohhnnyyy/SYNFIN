@@ -7,13 +7,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { 
-  PlusCircle, 
+  Calculator,
   MessageCircle, 
   TrendingUp, 
   DollarSign, 
   PieChart, 
   Brain,
-  Trash2,
+  Shield,
+  FileText,
+  CheckCircle,
   Send,
   Loader2
 } from 'lucide-react';
@@ -53,12 +55,13 @@ export const FinancialDashboard = () => {
   const [userContext, setUserContext] = useState('');
   const { currentUser } = useAuth();
 
-  const [newExpense, setNewExpense] = useState({
-    amount: '',
-    category: '',
-    description: '',
-    date: new Date().toISOString().split('T')[0]
+  // Applicant context and EMI calculator inputs
+  const [emiInputs, setEmiInputs] = useState({
+    principal: '',
+    annualRate: '',
+    tenureMonths: ''
   });
+  const [emiResult, setEmiResult] = useState<string>('');
 
   useEffect(() => {
     console.log('=== AUTH STATE CHANGE ===');
@@ -106,58 +109,19 @@ export const FinancialDashboard = () => {
     }
   };
 
-  const addExpense = () => {
-    console.log('=== ADD EXPENSE FUNCTION CALLED ===');
-    console.log('User:', currentUser);
-    console.log('New expense data:', newExpense);
-    
-    if (!currentUser || !newExpense.amount || !newExpense.category || !newExpense.description) {
-      console.log('Validation failed:', {
-        user: !!currentUser,
-        amount: !!newExpense.amount,
-        category: !!newExpense.category,
-        description: !!newExpense.description
-      });
+  const calculateEmi = () => {
+    const P = parseFloat(emiInputs.principal);
+    const annualRate = parseFloat(emiInputs.annualRate);
+    const n = parseInt(emiInputs.tenureMonths);
+    if (!P || !annualRate || !n || P <= 0 || annualRate <= 0 || n <= 0) {
+      setEmiResult('Please enter valid principal, rate, and tenure.');
       return;
     }
-
-    try {
-      // Create new expense object
-      const newExpenseData: Expense = {
-        id: Date.now().toString(), // Simple ID generation
-        user_id: currentUser.uid,
-        amount: parseFloat(newExpense.amount),
-        category: newExpense.category,
-        description: newExpense.description,
-        transaction_date: newExpense.date,
-        created_at: new Date().toISOString()
-      };
-      
-      console.log('Creating expense with data:', newExpenseData);
-      
-      // Add to current expenses array
-      const updatedExpenses = [...expenses, newExpenseData];
-      setExpenses(updatedExpenses);
-      
-      // Save to local storage
-      saveExpensesToStorage(currentUser.uid, updatedExpenses);
-      
-      console.log('Expense added successfully:', newExpenseData);
-      
-      // Reset form
-      setNewExpense({
-        amount: '',
-        category: '',
-        description: '',
-        date: new Date().toISOString().split('T')[0]
-      });
-      console.log('Form reset');
-    } catch (error) {
-      console.error('=== ERROR ADDING EXPENSE ===');
-      console.error('Error details:', error);
-      console.error('Error message:', error instanceof Error ? error.message : 'Unknown error');
-      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace');
-    }
+    const r = annualRate / 12 / 100; // monthly interest rate
+    const emi = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
+    const totalPayable = emi * n;
+    const interestPayable = totalPayable - P;
+    setEmiResult(`Monthly EMI: $${emi.toFixed(2)} | Interest: $${interestPayable.toFixed(2)} | Total: $${totalPayable.toFixed(2)}`);
   };
 
   const removeExpense = (index: number) => {
@@ -288,8 +252,8 @@ export const FinancialDashboard = () => {
       <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
           <div className="mb-12 text-center">
-            <h1 className="text-4xl sm:text-5xl font-bold text-slate-800 mb-4">Financial Dashboard</h1>
-            <p className="text-lg text-slate-600 max-w-2xl mx-auto">Track expenses and get AI-powered financial insights to make smarter financial decisions</p>
+            <h1 className="text-4xl sm:text-5xl font-bold text-slate-800 mb-4">Loan Dashboard</h1>
+            <p className="text-lg text-slate-600 max-w-2xl mx-auto">Manage your AI-driven loan processing workflow — EMI, KYC, underwriting, eligibility, and sanction letters</p>
           </div>
 
           <Card className="mb-8 shadow-lg border-0 bg-white/80 backdrop-blur-sm">
@@ -298,15 +262,15 @@ export const FinancialDashboard = () => {
                 <div className="p-2 bg-primary/10 rounded-lg">
                   <Brain className="w-6 h-6 text-primary" />
                 </div>
-                Personal Context
+                Applicant Context
               </CardTitle>
               <CardDescription className="text-base">
-                Help the AI provide more personalized advice by sharing your situation
+                Provide a short summary (e.g., employment, income, desired loan amount & tenure)
               </CardDescription>
             </CardHeader>
             <CardContent>
               <Input
-                placeholder="e.g., College student, Freelancer, Family of 4, Recent graduate..."
+                placeholder="e.g., Salaried, $60k/year, requesting $20k over 36 months"
                 value={userContext}
                 onChange={(e) => setUserContext(e.target.value)}
                 className="text-base py-3"
@@ -314,75 +278,71 @@ export const FinancialDashboard = () => {
             </CardContent>
           </Card>
 
-          <Tabs defaultValue="expenses" className="space-y-8">
+          <Tabs defaultValue="services" className="space-y-8">
             <TabsList className="grid w-full grid-cols-3 h-12 bg-white/80 backdrop-blur-sm shadow-sm">
-              <TabsTrigger value="expenses" className="text-base font-medium">Expense Tracking</TabsTrigger>
-              <TabsTrigger value="chat" className="text-base font-medium">AI Financial Chat</TabsTrigger>
+              <TabsTrigger value="services" className="text-base font-medium">Loan Services</TabsTrigger>
+              <TabsTrigger value="chat" className="text-base font-medium">AI Loan Chat</TabsTrigger>
               <TabsTrigger value="overview" className="text-base font-medium">Overview</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="expenses" className="space-y-8">
+            <TabsContent value="services" className="space-y-8">
               <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
                 <CardHeader className="pb-6">
-                  <CardTitle className="text-2xl font-bold text-gray-800">Add New Expense</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <Calculator className="w-6 h-6 text-primary" /> EMI Calculator
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Amount</label>
+                      <label className="text-sm font-medium text-gray-700">Principal Amount</label>
                       <Input
                         type="number"
-                        placeholder="Enter amount"
-                        value={newExpense.amount}
-                        onChange={(e) => setNewExpense({...newExpense, amount: e.target.value})}
+                        placeholder="Enter principal"
+                        value={emiInputs.principal}
+                        onChange={(e) => setEmiInputs({...emiInputs, principal: e.target.value})}
                         className="h-12 border-gray-200 focus:border-primary focus:ring-primary/20"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Category</label>
-                      <Select value={newExpense.category} onValueChange={(value) => setNewExpense({...newExpense, category: value})}>
-                        <SelectTrigger className="h-12 border-gray-200 focus:border-primary focus:ring-primary/20">
-                          <SelectValue placeholder="Select category" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="food">Food & Dining</SelectItem>
-                          <SelectItem value="transport">Transportation</SelectItem>
-                          <SelectItem value="entertainment">Entertainment</SelectItem>
-                          <SelectItem value="utilities">Utilities</SelectItem>
-                          <SelectItem value="healthcare">Healthcare</SelectItem>
-                          <SelectItem value="shopping">Shopping</SelectItem>
-                          <SelectItem value="other">Other</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Description</label>
+                      <label className="text-sm font-medium text-gray-700">Annual Interest Rate (%)</label>
                       <Input
-                        placeholder="Enter description"
-                        value={newExpense.description}
-                        onChange={(e) => setNewExpense({...newExpense, description: e.target.value})}
+                        type="number"
+                        placeholder="e.g., 12"
+                        value={emiInputs.annualRate}
+                        onChange={(e) => setEmiInputs({...emiInputs, annualRate: e.target.value})}
                         className="h-12 border-gray-200 focus:border-primary focus:ring-primary/20"
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-sm font-medium text-gray-700">Date</label>
+                      <label className="text-sm font-medium text-gray-700">Tenure (months)</label>
                       <Input
-                        type="date"
-                        value={newExpense.date}
-                        onChange={(e) => setNewExpense({...newExpense, date: e.target.value})}
+                        type="number"
+                        placeholder="e.g., 36"
+                        value={emiInputs.tenureMonths}
+                        onChange={(e) => setEmiInputs({...emiInputs, tenureMonths: e.target.value})}
                         className="h-12 border-gray-200 focus:border-primary focus:ring-primary/20"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-700">Result</label>
+                      <Input
+                        placeholder="EMI result will appear here"
+                        value={emiResult}
+                        readOnly
+                        className="h-12 border-gray-200"
                       />
                     </div>
                   </div>
                   <div className="mt-8 flex justify-end">
                     <LiquidButton 
-                      onClick={addExpense} 
+                      onClick={calculateEmi} 
                       variant="default"
                       size="lg"
                       className="font-semibold"
                     >
-                      <PlusCircle className="w-5 h-5 mr-2" />
-                      Add Expense
+                      <Calculator className="w-5 h-5 mr-2" />
+                      Calculate EMI
                     </LiquidButton>
                   </div>
                 </CardContent>
@@ -390,57 +350,61 @@ export const FinancialDashboard = () => {
 
               <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
                 <CardHeader className="pb-6">
-                  <CardTitle className="text-2xl font-bold text-gray-800">Recent Expenses</CardTitle>
+                  <CardTitle className="text-2xl font-bold text-gray-800">Agent Services</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  {expenses.length === 0 ? (
-                    <div className="text-center py-12">
-                      <div className="w-24 h-24 mx-auto mb-6 bg-gray-100 rounded-full flex items-center justify-center">
-                        <DollarSign className="w-12 h-12 text-gray-400" />
-                      </div>
-                      <p className="text-gray-500 text-lg">No expenses recorded yet</p>
-                      <p className="text-gray-400 text-sm mt-2">Add your first expense to get started with tracking</p>
-                    </div>
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {expenses.map((expense) => (
-                        <div key={expense.id} className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-200 hover:border-primary/30">
-                          <div className="flex items-center justify-between mb-4">
-                            <span className="text-2xl font-bold text-gray-800">${expense.amount}</span>
-                            <span className="px-3 py-1 bg-primary/10 text-primary text-xs font-medium rounded-full">
-                              {expense.category}
-                            </span>
-                          </div>
-                          <p className="text-gray-600 font-medium mb-2">{expense.description}</p>
-                          <p className="text-gray-400 text-sm">{expense.transaction_date}</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-200 hover:border-primary/30">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <MessageCircle className="w-5 h-5 text-primary" />
                         </div>
-                      ))}
+                        <h3 className="font-semibold text-gray-800">Master Agent Chat</h3>
+                      </div>
+                      <p className="text-gray-600 mb-4">Start the application with a guided conversation.</p>
+                      <LiquidButton asChild size="sm"><a href="/chat">Start Chat</a></LiquidButton>
                     </div>
-                  )}
-                  
-                  {expenses.length > 0 && (
-                    <div className="mt-8 pt-6 border-t border-gray-200">
-                      <LiquidButton 
-                        onClick={analyzeExpenses} 
-                        disabled={isLoading}
-                        variant="default"
-                        size="lg"
-                        className="w-full sm:w-auto font-semibold"
-                      >
-                        {isLoading ? (
-                          <>
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
-                            Analyzing...
-                          </>
-                        ) : (
-                          <>
-                            <PieChart className="w-5 h-5 mr-2" />
-                            Analyze Expenses
-                          </>
-                        )}
-                      </LiquidButton>
+                    <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-200 hover:border-primary/30">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <Shield className="w-5 h-5 text-primary" />
+                        </div>
+                        <h3 className="font-semibold text-gray-800">KYC Verification</h3>
+                      </div>
+                      <p className="text-gray-600 mb-4">Validate PAN/Aadhaar via mock KYC APIs.</p>
+                      <LiquidButton size="sm" variant="outline">Run KYC</LiquidButton>
                     </div>
-                  )}
+                    <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-200 hover:border-primary/30">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <TrendingUp className="w-5 h-5 text-primary" />
+                        </div>
+                        <h3 className="font-semibold text-gray-800">Underwriting</h3>
+                      </div>
+                      <p className="text-gray-600 mb-4">Fetch credit score and set pre-approved limits.</p>
+                      <LiquidButton size="sm" variant="outline">Run Underwriting</LiquidButton>
+                    </div>
+                    <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-200 hover:border-primary/30">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <CheckCircle className="w-5 h-5 text-primary" />
+                        </div>
+                        <h3 className="font-semibold text-gray-800">Eligibility Decision</h3>
+                      </div>
+                      <p className="text-gray-600 mb-4">Approve or reject based on policy thresholds.</p>
+                      <LiquidButton size="sm" variant="outline">Check Eligibility</LiquidButton>
+                    </div>
+                    <div className="bg-gradient-to-br from-white to-gray-50 p-6 rounded-xl border border-gray-200 hover:shadow-lg transition-all duration-200 hover:border-primary/30">
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <FileText className="w-5 h-5 text-primary" />
+                        </div>
+                        <h3 className="font-semibold text-gray-800">Sanction Letter</h3>
+                      </div>
+                      <p className="text-gray-600 mb-4">Generate and share a branded PDF sanction letter.</p>
+                      <LiquidButton size="sm" variant="outline">Generate Letter</LiquidButton>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -452,10 +416,10 @@ export const FinancialDashboard = () => {
                     <div className="p-3 bg-primary/10 rounded-xl">
                     <MessageCircle className="w-6 h-6 text-primary" />
                     </div>
-                    AI Financial Assistant
+                    AI Loan Assistant
                   </CardTitle>
                   <CardDescription className="text-lg text-gray-600 mt-2">
-                    Ask questions about investments, taxes, budgeting, or get personalized advice
+                    Ask about EMI, KYC, underwriting, eligibility decisions, and sanction letters
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
@@ -463,54 +427,54 @@ export const FinancialDashboard = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                     <div 
                       className="p-4 bg-gradient-to-br from-card to-secondary/50 rounded-xl border border-border hover:border-primary/30 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 group"
-                      onClick={() => setCurrentMessage("I need help with budget planning")}
+                      onClick={() => setCurrentMessage("Calculate EMI for $20,000 at 12% for 36 months")}
                     >
                       <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors duration-300">
-                          <PieChart className="w-4 h-4 text-primary" />
+                          <Calculator className="w-4 h-4 text-primary" />
                         </div>
-                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors duration-300">Budget Planning</h3>
+                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors duration-300">EMI Calculation</h3>
                       </div>
-                      <p className="text-sm text-muted-foreground">Get personalized budget advice</p>
+                      <p className="text-sm text-muted-foreground">Compute monthly EMI and payment schedule</p>
                     </div>
 
                     <div 
                       className="p-4 bg-gradient-to-br from-card to-secondary/50 rounded-xl border border-border hover:border-primary/30 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 group"
-                      onClick={() => setCurrentMessage("I need investment advice")}
+                      onClick={() => setCurrentMessage("Run KYC verification for PAN and Aadhaar")}
+                    >
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors duration-300">
+                          <Shield className="w-4 h-4 text-primary" />
+                        </div>
+                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors duration-300">KYC Verification</h3>
+                      </div>
+                      <p className="text-sm text-muted-foreground">Validate PAN/Aadhaar and collect documents</p>
+                    </div>
+
+                    <div 
+                      className="p-4 bg-gradient-to-br from-card to-secondary/50 rounded-xl border border-border hover:border-primary/30 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 group"
+                      onClick={() => setCurrentMessage("Fetch credit score and set pre-approved limit")}
                     >
                       <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors duration-300">
                           <TrendingUp className="w-4 h-4 text-primary" />
                         </div>
-                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors duration-300">Investment Advice</h3>
+                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors duration-300">Underwriting</h3>
                       </div>
-                      <p className="text-sm text-muted-foreground">Smart investment strategies</p>
+                      <p className="text-sm text-muted-foreground">Risk analysis and policy checks</p>
                     </div>
 
                     <div 
                       className="p-4 bg-gradient-to-br from-card to-secondary/50 rounded-xl border border-border hover:border-primary/30 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 group"
-                      onClick={() => setCurrentMessage("I need help with tax planning")}
+                      onClick={() => setCurrentMessage("Run eligibility decision and generate sanction letter")}
                     >
                       <div className="flex items-center gap-3 mb-2">
                         <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors duration-300">
-                          <DollarSign className="w-4 h-4 text-primary" />
+                          <CheckCircle className="w-4 h-4 text-primary" />
                         </div>
-                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors duration-300">Tax Planning</h3>
+                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors duration-300">Eligibility & Sanction</h3>
                       </div>
-                      <p className="text-sm text-muted-foreground">Optimize your tax strategy</p>
-                    </div>
-
-                    <div 
-                      className="p-4 bg-gradient-to-br from-card to-secondary/50 rounded-xl border border-border hover:border-primary/30 cursor-pointer hover:shadow-lg transition-all duration-300 hover:scale-105 group"
-                      onClick={() => setCurrentMessage("I want to check my financial health")}
-                    >
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className="p-2 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors duration-300">
-                          <Brain className="w-4 h-4 text-primary" />
-                        </div>
-                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors duration-300">Financial Health</h3>
-                      </div>
-                      <p className="text-sm text-muted-foreground">Assess your financial wellness</p>
+                      <p className="text-sm text-muted-foreground">Decisioning and PDF generation</p>
                     </div>
                   </div>
                   <div className="space-y-6 mb-6 max-h-96 overflow-y-auto bg-gray-50 rounded-xl p-6">
@@ -519,8 +483,8 @@ export const FinancialDashboard = () => {
                         <div className="w-20 h-20 mx-auto mb-6 bg-primary/10 rounded-full flex items-center justify-center">
                   <Brain className="w-10 h-10 text-primary" />
                         </div>
-                        <p className="text-gray-600 text-lg font-medium mb-2">Start a conversation with your AI financial assistant</p>
-                        <p className="text-gray-500 text-sm">Try asking: "How can I save money?" or "Should I invest in stocks?"</p>
+                        <p className="text-gray-600 text-lg font-medium mb-2">Start a conversation with your AI loan assistant</p>
+                        <p className="text-gray-500 text-sm">Try asking: "Compute my EMI" or "Verify my KYC"</p>
                       </div>
                     ) : (
                       chatMessages.map((chat) => (
@@ -589,10 +553,10 @@ export const FinancialDashboard = () => {
               {/* Header Section */}
               <div className="text-center mb-12">
                 <h2 className="text-4xl font-bold bg-gradient-to-r from-primary via-primary/80 to-primary/60 bg-clip-text text-transparent mb-4">
-                  Financial Overview
+                  Application Overview
                 </h2>
                 <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Get insights into your spending patterns and financial health at a glance
+                  Track key metrics across EMI, KYC, underwriting, eligibility, and PDF generation
                 </p>
               </div>
 
@@ -601,16 +565,16 @@ export const FinancialDashboard = () => {
                 <Card className="group relative overflow-hidden bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 border-primary/20 hover:border-primary/40 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-6">
-                    <CardTitle className="text-xl font-bold text-foreground">Total Expenses</CardTitle>
+                    <CardTitle className="text-xl font-bold text-foreground">EMI Result</CardTitle>
                     <div className="p-3 bg-gradient-to-br from-emerald-100 to-emerald-50 rounded-xl shadow-sm">
-                      <DollarSign className="h-7 w-7 text-emerald-600" />
+                      <Calculator className="h-7 w-7 text-emerald-600" />
                     </div>
                   </CardHeader>
                   <CardContent className="relative">
-                    <div className="text-4xl font-bold text-foreground mb-3">${totalSpent.toFixed(2)}</div>
+                    <div className="text-xl font-semibold text-foreground mb-1">{emiResult || 'Calculate EMI to view details'}</div>
                     <p className="text-base text-muted-foreground flex items-center gap-2">
                       <span className="inline-block w-2 h-2 bg-emerald-500 rounded-full"></span>
-                      {expenses.length} transactions recorded
+                      EMI summary based on your inputs
                     </p>
                   </CardContent>
                 </Card>
@@ -618,16 +582,16 @@ export const FinancialDashboard = () => {
                 <Card className="group relative overflow-hidden bg-gradient-to-br from-primary/5 via-primary/10 to-primary/5 border-primary/20 hover:border-primary/40 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-6">
-                    <CardTitle className="text-xl font-bold text-foreground">Categories</CardTitle>
+                    <CardTitle className="text-xl font-bold text-foreground">KYC Status</CardTitle>
                     <div className="p-3 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl shadow-sm">
-                      <PieChart className="h-7 w-7 text-primary" />
+                      <Shield className="h-7 w-7 text-primary" />
                     </div>
                   </CardHeader>
                   <CardContent className="relative">
-                    <div className="text-4xl font-bold text-foreground mb-3">{Object.keys(categoryTotals).length}</div>
+                    <div className="text-2xl font-bold text-foreground mb-3">Pending</div>
                     <p className="text-base text-muted-foreground flex items-center gap-2">
                       <span className="inline-block w-2 h-2 bg-primary rounded-full"></span>
-                      Different spending categories
+                      PAN/Aadhaar validation and documents
                     </p>
                   </CardContent>
                 </Card>
@@ -644,7 +608,7 @@ export const FinancialDashboard = () => {
                     <div className="text-4xl font-bold text-foreground mb-3">{chatMessages.length}</div>
                     <p className="text-base text-muted-foreground flex items-center gap-2">
                       <span className="inline-block w-2 h-2 bg-violet-500 rounded-full"></span>
-                      AI conversations completed
+                      AI loan conversations completed
                     </p>
                   </CardContent>
                 </Card>

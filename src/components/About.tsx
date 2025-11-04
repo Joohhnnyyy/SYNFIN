@@ -23,35 +23,35 @@ export const About = () => {
             </div>
             
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              Financial freedom through{" "}
-              <span className="text-primary">intelligent coaching</span>
+              AI-driven loan processing with{" "}
+              <span className="text-primary">MCP + FastAPI orchestration</span>
             </h2>
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-12 leading-relaxed max-w-4xl">
-              Traditional financial advice fails those with irregular incomes. Our AI learns your unique patterns—whether you're a gig worker, freelancer, or have variable income—to provide personalized guidance that actually works for your lifestyle.
+              A comprehensive multi-agent system guides customers from first chat to sanction letter: Master starts the conversation, Sales collects loan details and computes EMI, Verification validates KYC via mock APIs, Underwriting fetches credit scores, Eligibility decides approval, and the PDF Agent generates the final sanction letter.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/development">
+              <Link to="/login">
                 <Button 
                   variant="default"
                   size="lg"
                   className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium px-8 py-6 h-auto rounded-full shadow-medium hover:shadow-strong transition-all duration-300 hover:scale-105 group"
                 >
                   <span className="flex items-center gap-3">
-                    Start Your Journey
+                    Start Loan Application
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Button>
               </Link>
               
-              <Link to="/about">
+              <Link to="/development">
                 <Button 
                   variant="outline"
                   size="lg"
                   className="border-2 border-primary/30 text-primary hover:bg-primary/5 hover:border-primary/50 font-medium px-8 py-6 h-auto rounded-full transition-all duration-300"
                 >
-                  See How It Works
+                  See Workflow
                 </Button>
               </Link>
             </div>
@@ -61,25 +61,25 @@ export const About = () => {
           <div className="grid md:grid-cols-3 gap-8 animate-fade-in-up delay-400">
             <div className="group p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-medium">
               <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <Database className="w-6 h-6 text-primary" />
+                <Brain className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
-                Smart Data Integration
+                MCP-Orchestrated Agents
               </h3>
               <p className="text-muted-foreground leading-relaxed">
-                Connects all your financial accounts, gig platforms, and income sources for complete visibility.
+                Master, Sales, Verification, Underwriting, Eligibility, and PDF Agents coordinate end-to-end.
               </p>
             </div>
 
             <div className="group p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-medium">
               <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <Brain className="w-6 h-6 text-primary" />
+                <Database className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
-                AI Learning Engine
+                FastAPI Gateway
               </h3>
               <p className="text-muted-foreground leading-relaxed">
-                Continuously learns your spending habits, income patterns, and financial goals to provide better advice.
+                A secure API layer exposes agent workflows, enabling scalable, modular loan processing.
               </p>
             </div>
 
@@ -88,10 +88,10 @@ export const About = () => {
                 <Shield className="w-6 h-6 text-primary" />
               </div>
               <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
-                Secure & Private
+                Secure KYC & Documents
               </h3>
               <p className="text-muted-foreground leading-relaxed">
-                Bank-level security with privacy-first design. Your financial data stays protected and confidential.
+                Mock KYC validation (PAN/Aadhaar) with automated sanction letter generation for approved loans.
               </p>
             </div>
           </div>

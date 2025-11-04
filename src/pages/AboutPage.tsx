@@ -1,40 +1,16 @@
 import { Header } from "../components/Header";
 import { Footer } from "../components/Footer";
 import { LiquidButton } from "../components/ui/liquid-glass-button";
-import { ArrowRight, Brain, Database, Shield, TrendingUp, AlertTriangle, Target } from "lucide-react";
+import { ArrowRight, Brain, Database, Shield, TrendingUp, AlertTriangle, Target, PieChart } from "lucide-react";
 
 const AboutPage = () => {
   const services = [
-    {
-      number: "01",
-      title: "Behavioral Learning",
-      description: "AI continuously analyzes your spending patterns, income fluctuations, and financial habits to understand your unique situation.",
-      icon: Brain
-    },
-    {
-      number: "02",
-      title: "Data Integration",
-      description: "Seamlessly connects bank accounts, gig platforms, and financial apps for a complete financial picture.",
-      icon: Database
-    },
-    {
-      number: "03",
-      title: "Risk Analysis",
-      description: "Proactively identifies potential financial risks and provides early warnings to prevent overspending.",
-      icon: AlertTriangle
-    },
-    {
-      number: "04",
-      title: "Personalized Recommendations",
-      description: "Delivers tailored advice for saving, investing, and spending based on your specific income patterns.",
-      icon: Target
-    },
-    {
-      number: "05",
-      title: "Financial Security",
-      description: "Helps build emergency funds and financial safety nets designed for irregular income earners.",
-      icon: Shield
-    }
+    { number: "01", title: "Master Agent", description: "Welcomes customers, understands intent, and initiates the loan process via chat.", icon: Brain },
+    { number: "02", title: "Sales Agent", description: "Captures loan amount, rate, tenure and computes EMI.", icon: TrendingUp },
+    { number: "03", title: "Verification Agent", description: "Validates PAN/Aadhaar through mock KYC APIs.", icon: Shield },
+    { number: "04", title: "Underwriting Agent", description: "Fetches credit score and sets pre-approved limits.", icon: PieChart },
+    { number: "05", title: "Eligibility Agent", description: "Decides approval or rejection based on policy rules.", icon: Target },
+    { number: "06", title: "PDF Agent", description: "Generates sanction letter for approved loans.", icon: AlertTriangle },
   ];
 
   return (
@@ -51,11 +27,11 @@ const AboutPage = () => {
         
         <div className="container mx-auto px-6 relative z-10">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight animate-fade-in-up">
-            <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">Revolutionizing</span> Personal Finance with AI.
+            <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">AI-Driven</span> Loan Processing.
           </h1>
           
           <p className="text-xl md:text-2xl text-muted-foreground max-w-5xl leading-relaxed mb-12 animate-fade-in-up delay-200">
-            Financial advice shouldn't be one-size-fits-all. We help individuals with diverse income patterns—gig workers, freelancers, and irregular earners—build financial security through intelligent, personalized AI coaching that learns and adapts to your unique situation.
+            A multi-agent system orchestrated via MCP and exposed through FastAPI. From initial chat to verified KYC, underwriting, eligibility decision, and sanction letter generation — the workflow is automated, auditable, and scalable.
           </p>
           
           {/* Stats */}
@@ -80,15 +56,15 @@ const AboutPage = () => {
         <div className="container mx-auto px-6">
           <div className="text-center mb-16 animate-fade-in-up">
             <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">How</span> Our AI Works
+              <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">Workflow:</span> From Chat to Sanction Letter
             </h2>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mx-auto mb-8"></div>
           </div>
           
           <div className="mb-16 text-center animate-fade-in-up delay-200">
-            <h3 className="text-xl font-semibold mb-6 text-muted-foreground">Our Approach</h3>
+            <h3 className="text-xl font-semibold mb-6 text-muted-foreground">System Overview</h3>
             <p className="text-xl md:text-2xl text-foreground max-w-4xl leading-relaxed mx-auto">
-              Every financial journey is unique. Our AI learns your patterns, understands your goals, and provides guidance that evolves with your changing circumstances.
+              Specialized agents collaborate: Master and Sales for engagement and EMI, Verification for KYC checks, Underwriting for credit assessment, Eligibility for decisions, and PDF for final documentation.
             </p>
           </div>
 
@@ -135,7 +111,7 @@ const AboutPage = () => {
                 </div>
                 <h3 className="text-2xl font-bold mb-6 text-primary">Mission</h3>
                 <p className="text-lg text-foreground leading-relaxed">
-                  Democratizing financial wellness by providing intelligent, personalized coaching that adapts to diverse income patterns. We believe everyone deserves access to financial guidance that understands their unique circumstances and helps them build lasting financial security.
+                  Streamline loan approvals with transparent, AI-driven workflows. Deliver fast, compliant, and user-friendly processing from the first conversation to the final sanction letter.
                 </p>
               </div>
             </div>
@@ -147,7 +123,7 @@ const AboutPage = () => {
                 </div>
                 <h3 className="text-2xl font-bold mb-6 text-primary">Vision</h3>
                 <p className="text-lg text-foreground leading-relaxed">
-                  Empowering everyone to achieve financial freedom through intelligent, personalized AI coaching. We envision a world where financial success isn't determined by traditional employment patterns, but where every individual—regardless of their income structure—has access to sophisticated financial guidance that grows with them and adapts to their evolving needs.
+                  A modular, multi-agent loan platform where institutions deploy and scale agent workflows securely, with clear auditability and customer-centric UX.
                 </p>
               </div>
             </div>
@@ -166,14 +142,14 @@ const AboutPage = () => {
         <div className="container mx-auto px-6 text-center relative z-10">
           <div className="animate-fade-in-up">
             <h2 className="text-4xl md:text-5xl font-bold mb-8 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              Ready to transform your finances?
+              Ready to start your loan application?
             </h2>
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands who've already improved their financial health with our AI-powered coaching. Start your personalized journey today.
+              Begin the conversation and let our agents guide you through KYC, underwriting, eligibility, and sanction letter generation.
             </p>
             <LiquidButton size="lg" asChild className="font-medium">
-              <a href="/contact" className="flex items-center gap-2">
-                Get Started
+              <a href="/login" className="flex items-center gap-2">
+                Start Now
                 <ArrowRight className="w-5 h-5" />
               </a>
             </LiquidButton>

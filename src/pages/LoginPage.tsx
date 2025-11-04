@@ -142,7 +142,7 @@ const LoginPage = () => {
         <div className="max-w-md mx-auto">
           <div className="text-center mb-8">
             <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              {isLogin ? "Welcome Back" : "Join Savify"}
+              {isLogin ? "Welcome Back" : "Join Synfin"}
             </h1>
             <p className="text-muted-foreground">
               {isLogin 
