@@ -1,253 +1,156 @@
-# Savify
+# SYNFIN
 
-**AI-Powered Financial Coaching Platform**
+AI-driven loan advisory frontend with a multi-agent FastAPI backend. The frontend (Vite + React + TypeScript) provides a conversational interface that captures user intent (loan amount, tenure, PAN, Aadhar, salary) and sends structured updates to the backend. The backend (in `AI-Loan-Advisor-main/`) orchestrates specialized agents to guide users from initial discussion through verification, underwriting, eligibility, and PDF sanction letter generation.
 
-Savify is a comprehensive web application that provides intelligent financial coaching designed to help individuals with irregular income patterns achieve financial wellness. The platform leverages artificial intelligence to analyze user behavior, identify spending patterns, assess financial risks, and deliver personalized recommendations for improved financial health.
+## Overview
 
-## Table of Contents
+- Frontend: Vite React SPA with intent parsing and agent-aware messaging.
+- Backend: FastAPI service with agents: Master, Sales, Verification, Underwriting, Eligibility, PDF.
+- Deployment: Vercel-ready frontend; backend can run locally or be hosted on Render/Railway.
 
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Getting Started](#getting-started)
-- [Project Structure](#project-structure)
-- [Deployment](#deployment)
-- [Backend Services](#backend-services)
-- [Development Guidelines](#development-guidelines)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Features
-
-### Core Functionality
-- **AI-Powered Financial Coaching**: Personalized guidance that adapts to individual financial patterns and goals
-- **Behavioral Analysis**: Advanced pattern recognition for spending habits and financial behaviors
-- **Risk Assessment**: Intelligent identification of potential financial risks and vulnerabilities
-- **Tailored Recommendations**: Customized advice based on individual financial situations and objectives
-- **Multi-Platform Authentication**: Secure sign-in support for email, Google, GitHub, and Microsoft accounts
-- **Real-time Dashboard**: Interactive financial dashboard with expense tracking and analytics
-- **Chat Interface**: AI-powered conversational interface for financial guidance and support
-
-### User Experience
-- **Responsive Design**: Fully optimized for desktop, tablet, and mobile devices
-- **Modern UI**: Built with shadcn/ui components and Tailwind CSS for professional appearance
-- **Real-time Updates**: Dynamic content updates and interactive elements
-- **Accessibility**: WCAG compliant interface design for inclusive user experience
-- **Performance Optimized**: Fast loading times and smooth interactions
-
-## Technology Stack
-
-### Frontend
-- **React 18** - Modern React with hooks and functional components
-- **TypeScript** - Type-safe development environment
-- **Vite** - Fast build tool and development server
-- **Tailwind CSS** - Utility-first CSS framework
-- **shadcn/ui** - High-quality React component library
-- **React Router** - Client-side routing and navigation
-- **React Query** - Server state management and caching
-- **Framer Motion** - Animation and motion graphics
-
-### Backend & Services
-- **Firebase** - Authentication and real-time database
-- **Supabase** - Additional backend services and database management
-- **FastAPI** - Python-based API backend (optional deployment)
-- **PostgreSQL** - Primary database for production environments
-- **Redis** - Caching and session management
-
-### Development Tools
-- **ESLint** - Code linting and quality assurance
-- **PostCSS** - CSS processing and optimization
-- **React Hook Form** - Form handling and validation
-- **Zod** - Schema validation and type checking
-
-## Getting Started
-
-### Prerequisites
-- Node.js (version 18 or higher)
-- npm or yarn package manager
-- Git for version control
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Joohhnnyyy/savify.git
-   cd savify
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Environment Setup**
-   Create a `.env` file in the root directory and configure the following variables:
-   ```env
-   VITE_FIREBASE_API_KEY=your_firebase_api_key
-   VITE_FIREBASE_AUTH_DOMAIN=your_firebase_auth_domain
-   VITE_FIREBASE_PROJECT_ID=your_firebase_project_id
-   VITE_FIREBASE_STORAGE_BUCKET=your_firebase_storage_bucket
-   VITE_FIREBASE_MESSAGING_SENDER_ID=your_firebase_messaging_sender_id
-   VITE_FIREBASE_APP_ID=your_firebase_app_id
-   VITE_FIREBASE_MEASUREMENT_ID=your_firebase_measurement_id
-   VITE_SUPABASE_URL=your_supabase_url
-   VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_publishable_key
-   ```
-
-   Backend API configuration (optional but recommended for production/dev alignment):
-   ```env
-   # Prefer setting one of these to the backend base URL
-   VITE_API_URL=https://your-backend.example.com
-   # or
-   VITE_BACKEND_URL=https://your-backend.example.com
-
-   # If your backend is mounted under a path prefix (e.g., behind a reverse proxy):
-   # Examples: "/loan", "/api/v1" (do not include trailing slash)
-   VITE_API_PREFIX=/loan
-   ```
-
-   Notes:
-   - In development, if `VITE_API_URL`/`VITE_BACKEND_URL` are not set, the app uses Vite’s proxy at `/api`.
-   - `VITE_API_PREFIX` helps when your FastAPI app is served under a subpath; the frontend will try both prefixed and non-prefixed endpoints to avoid 404s.
-   - If you see `Not Found` for all endpoints, verify your backend base URL and any mount prefix, then set `VITE_API_URL` and `VITE_API_PREFIX` accordingly.
-
-4. **Start the development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Open your browser**
-   Navigate to `http://localhost:8080` to view the application
-
-### Available Scripts
-
-- `npm run dev` - Start the development server
-- `npm run build` - Build the application for production
-- `npm run build:dev` - Build the application in development mode
-- `npm run lint` - Run ESLint for code quality checks
-- `npm run preview` - Preview the production build locally
-
-## Project Structure
+## Repository Structure
 
 ```
-savify/
-├── public/                 # Static assets
-│   ├── favicon.svg
-│   ├── robots.txt
-│   ├── fonts/             # Custom font files
-│   └── *.mp4              # Video assets
-├── src/
-│   ├── components/        # Reusable UI components
-│   │   ├── ui/           # Base UI components (shadcn/ui)
-│   │   ├── Header.tsx    # Navigation header
-│   │   ├── Footer.tsx    # Site footer
-│   │   └── ...           # Other components
-│   ├── contexts/          # React context providers
-│   │   └── AuthContext.tsx
-│   ├── hooks/             # Custom React hooks
-│   ├── lib/               # Utility functions and configurations
-│   │   ├── firebase.ts   # Firebase configuration
-│   │   ├── supabase.ts   # Supabase configuration
-│   │   └── utils.ts      # Utility functions
-│   ├── pages/             # Application pages/routes
-│   │   ├── Index.tsx     # Landing page
-│   │   ├── LoginPage.tsx # Authentication page
-│   │   ├── FinancialDashboard.tsx # Main dashboard
-│   │   └── ...           # Other pages
-│   └── assets/            # Images and other assets
-├── backend/               # Backend deployment configuration
-│   ├── Dockerfile        # Docker configuration
-│   ├── docker-compose.yml # Multi-service deployment
-│   ├── requirements.txt  # Python dependencies
-│   └── ...               # Other backend files
-├── supabase/              # Supabase configuration
-│   ├── config.toml       # Supabase configuration
-│   └── migrations/       # Database migrations
-└── configuration files    # Various config files
+├── src/                      # Frontend source (React + TS)
+├── public/                   # Static assets
+├── vercel.json               # Vercel build/output/env and SPA rewrites
+├── AI-Loan-Advisor-main/     # Backend (FastAPI + agents)
+│   ├── app.py                # FastAPI app
+│   ├── loan_advisor/
+│   │   ├── agents/           # Master, Sales, Verification, Underwriting, Eligibility, PDF
+│   │   ├── models/           # LoanApplication, Customer, enums
+│   │   └── services/         # Orchestrator and LLM service
+│   ├── sanction_letters/     # Generated PDFs
+│   ├── tests/                # Test clients and scenarios
+│   └── README.md             # Backend-specific docs
+└── README.md                 # This document
 ```
 
-## Deployment
+## Backend Architecture (from AI-Loan-Advisor)
 
-### Frontend Deployment (Vercel)
+### Agents
+- Master Agent: initial interaction and interest generation
+- Sales Agent: loan amount, rate, tenure discussion and EMI
+- Verification Agent: KYC (PAN, Aadhar) via mock APIs
+- Underwriting Agent: credit score and pre-approved limits
+- Eligibility Agent: approval decision (instant/conditional/reject)
+- PDF Agent: sanction letter generation
 
-The application is configured for seamless deployment on Vercel:
+### Workflow
+1. Master welcomes, Sales discusses amount/tenure
+2. Verification collects PAN/Aadhar
+3. Underwriting sets `credit_score`, `pre_approved_limit`
+4. Eligibility makes decision; may ask for monthly salary
+5. PDF generates the sanction letter on approval
 
-1. **Automatic Deployment**
-   ```bash
-   ./deploy.sh
-   ```
+### Key Endpoints
+- `POST /chat` — Start/continue conversation; accepts `data_update` to set fields
+- `GET /application/{app_id}` — Retrieve application details
+- `GET /sanction-letter/{app_id}` — Download sanction letter PDF
+- `GET /health` — Health check
 
-2. **Manual Deployment**
-   ```bash
-   npm run build
-   npx vercel --prod
-   ```
+### Decision Logic
+- Instant approval: `loan_amount ≤ pre_approved_limit` AND `credit_score ≥ 700`
+- Conditional approval: requires `salary` and checks `emi ≤ 50% of salary`
+- Rejection: KYC failure, `emi > 50%`, low credit
 
-3. **Environment Variables**
-   Configure the following in your Vercel dashboard:
-   - `VITE_FIREBASE_API_KEY`
-   - `VITE_FIREBASE_AUTH_DOMAIN`
-   - `VITE_FIREBASE_PROJECT_ID`
-   - `VITE_FIREBASE_STORAGE_BUCKET`
-   - `VITE_FIREBASE_MESSAGING_SENDER_ID`
-   - `VITE_FIREBASE_APP_ID`
-   - `VITE_FIREBASE_MEASUREMENT_ID`
+## Frontend Intent Handling
 
-### Backend Deployment
+- Extracts and normalizes: loan amount (supports `lakh`/`crore`), tenure (`years`→months), salary (monthly rupees), name.
+- Avoids misreads: ignores 12-digit Aadhar as amount; only captures salary in explicit contexts.
+- Sends structured updates in `data_update` with each chat message:
+  - `loan_amount`, `tenure_months`, `salary`, and optional `status` to guide backend agent selection.
 
-Multiple deployment options are available:
+## Quick Start (Local)
 
-1. **Docker Deployment**
-   ```bash
-   cd backend
-   ./deploy-backend.sh
-   ```
+### 1) Backend
+```bash
+cd AI-Loan-Advisor-main
+uv sync
+uvicorn app:app --reload
+# Optional: uv run python tests/test_client.py
+```
 
-2. **Cloud Platforms**
-   - Railway
-   - Render
-   - Heroku
-   - Google Cloud Run
-   - AWS ECS/Fargate
+### 2) Frontend
+```bash
+npm install
+echo "VITE_API_URL=http://localhost:8000" > .env
+npm run dev
+# Open http://localhost:8081/
+```
 
-## Backend Services
+## Deployment (Frontend)
 
-### API Backend
-The project includes a comprehensive backend setup with:
-- FastAPI-based REST API
-- PostgreSQL database with optimized schema
-- Redis caching layer
-- Nginx reverse proxy configuration
-- Docker containerization
-- Health monitoring and logging
+- Vercel is preconfigured via `vercel.json`:
+  - `buildCommand`: `npm run build`
+  - `outputDirectory`: `dist`
+  - `framework`: `vite`
+  - SPA rewrites: all routes → `/index.html`
+  - env: `VITE_API_URL`, `VITE_SUPABASE_PROJECT_ID`
 
-### Database Schema
-- User management and profiles
-- Financial accounts and transactions
-- Budget tracking and goals
-- AI conversation history
-- Audit logging and security
+### Deploy via CLI
+```bash
+npm run build
+npx vercel --prod
+```
 
-## Development Guidelines
+### Deploy via GitHub
+- Import repo in Vercel, set env vars (`VITE_API_URL`, etc.), and deploy.
 
-### Code Quality
-- TypeScript for type safety and better developer experience
-- ESLint configuration for consistent code style
-- Component-based architecture with reusable components
-- Responsive design principles and mobile-first approach
+## Example Usage
 
-### Performance
-- Vite for fast development and optimized building
-- Code splitting and lazy loading for better performance
-- Optimized asset delivery and caching strategies
-- Efficient state management with React Query
+```python
+import requests
 
-### Security
-- Environment variable management for sensitive data
-- Secure authentication flows with Firebase
-- Data validation and sanitization
-- HTTPS enforcement in production environments
+# Start
+r = requests.post("http://localhost:8000/chat", json={
+  "customer_id": "CUST001",
+  "message": "Hello, I need a loan"
+})
+app_id = r.json()["application_id"]
 
-## Contributing
+# Provide details
+requests.post("http://localhost:8000/chat", json={
+  "customer_id": "CUST001",
+  "application_id": app_id,
+  "message": "I need 10 lakh for 2 years"
+})
+
+# KYC
+requests.post("http://localhost:8000/chat", json={
+  "customer_id": "CUST001",
+  "application_id": app_id,
+  "message": "ABCDE1234F"
+})
+requests.post("http://localhost:8000/chat", json={
+  "customer_id": "CUST001",
+  "application_id": app_id,
+  "message": "123456789012"
+})
+
+# Underwriting → Eligibility → Salary if needed
+requests.post("http://localhost:8000/chat", json={
+  "customer_id": "CUST001",
+  "application_id": app_id,
+  "message": "Continue"
+})
+requests.post("http://localhost:8000/chat", json={
+  "customer_id": "CUST001",
+  "application_id": app_id,
+  "message": "My salary is 60000"
+})
+```
+
+## Sanction Letters
+
+- Approved loans generate PDFs under `AI-Loan-Advisor-main/sanction_letters/`.
+- Download via `GET /sanction-letter/{app_id}`.
+
+## Notes
+
+- Ensure backend CORS allows your Vercel domain when deploying.
+- Frontend bundles are large; consider code-splitting for performance.
+- Do not commit secrets. `.gitignore` excludes `.env`, `node_modules`, `dist`, and caches.
 
 We welcome contributions to improve Savify. Please follow these guidelines:
 
