@@ -8,6 +8,11 @@ AI-driven loan advisory frontend with a multi-agent FastAPI backend. The fronten
 - Backend: FastAPI service with agents: Master, Sales, Verification, Underwriting, Eligibility, PDF.
 - Deployment: Vercel-ready frontend; backend can run locally or be hosted on Render/Railway.
 
+### Backend Links
+- Backend URL: https://ai-loan-advisor-zeta.vercel.app/
+- FastAPI Docs: https://ai-loan-advisor-zeta.vercel.app/docs
+- Backend GitHub: https://github.com/Madhur-Prakash/AI-Loan-Advisor.git
+
 ## Repository Structure
 
 ```
@@ -96,11 +101,6 @@ npx vercel --prod
 
 ### Deploy via GitHub
 - Import repo in Vercel, set env vars (`VITE_API_URL`, etc.), and deploy.
-
-### Backend Links
-- Backend URL: https://ai-loan-advisor-zeta.vercel.app/
-- FastAPI Docs: https://ai-loan-advisor-zeta.vercel.app/docs
-- Backend GitHub: https://github.com/Madhur-Prakash/AI-Loan-Advisor.git
 
 ## Example Usage
 
