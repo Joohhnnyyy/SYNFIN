@@ -11,10 +11,15 @@
 - **Branch**: main
 - **Directory**: Financial-AI-System-V2-main
 
+## Backend (Vercel)
+- **URL**: https://ai-loan-advisor-zeta.vercel.app/
+- **Docs**: https://ai-loan-advisor-zeta.vercel.app/docs
+- **GitHub Repository**: https://github.com/Madhur-Prakash/AI-Loan-Advisor.git
+
 ## Environment Variables
 
 ### Frontend (Vercel)
-- VITE_API_URL: https://savify-backend.onrender.com
+- VITE_API_URL: https://ai-loan-advisor-zeta.vercel.app
 - VITE_FIREBASE_API_KEY: [configured in Vercel dashboard]
 - VITE_FIREBASE_AUTH_DOMAIN: [configured in Vercel dashboard]
 - VITE_FIREBASE_PROJECT_ID: [configured in Vercel dashboard]
@@ -32,4 +37,4 @@
 To verify the integration is working correctly:
 1. Visit https://savify.vercel.app
 2. Navigate to the Financial Dashboard
-3. The frontend should successfully connect to the backend API at https://savify-backend.onrender.com
+3. The frontend should successfully connect to the backend API at https://ai-loan-advisor-zeta.vercel.app

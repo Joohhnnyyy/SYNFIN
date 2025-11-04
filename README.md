@@ -97,6 +97,11 @@ npx vercel --prod
 ### Deploy via GitHub
 - Import repo in Vercel, set env vars (`VITE_API_URL`, etc.), and deploy.
 
+### Backend Links
+- Backend URL: https://ai-loan-advisor-zeta.vercel.app/
+- FastAPI Docs: https://ai-loan-advisor-zeta.vercel.app/docs
+- Backend GitHub: https://github.com/Madhur-Prakash/AI-Loan-Advisor.git
+
 ## Example Usage
 
 ```python
