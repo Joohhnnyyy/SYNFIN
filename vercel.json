@@ -17,7 +17,7 @@
     }
   ],
   "env": {
-    "VITE_API_URL": "https://savify-backend.onrender.com",
+    "VITE_API_URL": "https://ai-loan-advisor-zeta.vercel.app",
     "VITE_SUPABASE_PROJECT_ID": "slppeaykjqepuyyxtaqt"
   },
   "installCommand": "npm install"
