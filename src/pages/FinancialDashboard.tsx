@@ -121,7 +121,7 @@ export const FinancialDashboard = () => {
     const emi = P * r * Math.pow(1 + r, n) / (Math.pow(1 + r, n) - 1);
     const totalPayable = emi * n;
     const interestPayable = totalPayable - P;
-    setEmiResult(`Monthly EMI: $${emi.toFixed(2)} | Interest: $${interestPayable.toFixed(2)} | Total: $${totalPayable.toFixed(2)}`);
+    setEmiResult(`Monthly EMI: ₹${emi.toFixed(2)} | Interest: ₹${interestPayable.toFixed(2)} | Total: ₹${totalPayable.toFixed(2)}`);
   };
 
   const removeExpense = (index: number) => {
@@ -270,7 +270,7 @@ export const FinancialDashboard = () => {
             </CardHeader>
             <CardContent>
               <Input
-                placeholder="e.g., Salaried, $60k/year, requesting $20k over 36 months"
+                placeholder="e.g., Salaried, ₹60k/year, requesting ₹20k over 36 months"
                 value={userContext}
                 onChange={(e) => setUserContext(e.target.value)}
                 className="text-base py-3"

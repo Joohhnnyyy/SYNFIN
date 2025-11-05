@@ -15,57 +15,60 @@ import {
   Star,
   TrendingUp,
   Award,
-  Brain
-} from "lucide-react";
+  Brain,
+  FileText
+}  from "lucide-react";
 
 const PhilosophyPage = () => {
-  const philosophyPillars = [
+    const philosophyPillars = [
     {
-      icon: Target,
-      title: "Personalization",
-      description: "We believe every individual's financial journey is unique. Our AI adapts to your specific income patterns, spending habits, and life circumstances to provide truly personalized guidance.",
-      principles: ["Individualized coaching", "Adaptive algorithms", "Personal goal alignment", "Custom recommendations"]
+      icon: Heart,
+      title: "Empathy by Design",
+      description: "Loans are emotional decisions. Our agents communicate with care, acknowledge uncertainty, and guide users with supportive language and clear options.",
+      principles: ["Human-centered messaging", "Calm tone under uncertainty", "Actionable next steps", "Inclusive UX"]
     },
     {
       icon: Shield,
-      title: "Security",
-      description: "Financial data requires the highest level of protection. We maintain rigorous security standards and privacy protocols to safeguard your sensitive information.",
-      principles: ["Data encryption", "Privacy protection", "Secure processing", "Transparent policies"]
+      title: "Privacy & Security",
+      description: "Privacy-first architecture. We separate concerns across agents, minimize sensitive data surface area, and use transparent APIs with controlled scopes.",
+      principles: ["Least-privilege access", "Explicit consent", "Clear data boundaries", "Auditable flows"]
     },
     {
       icon: TrendingUp,
-      title: "Growth",
-      description: "We are committed to helping you achieve measurable financial improvement. Every feature is designed to create tangible value and sustainable financial wellness.",
-      principles: ["Measurable progress", "Sustainable habits", "Financial wellness", "Continuous improvement"]
+      title: "Outcome-Driven",
+      description: "Every step advances the user toward a decision: discover, verify, assess, decide, document. We measure clarity and completion, not just clicks.",
+      principles: ["EMI clarity", "Verification confidence", "Risk transparency", "Decision explainability"]
     }
   ];
 
-  const coreValues = [
+
+    const coreValues = [
     {
       icon: Compass,
-      title: "Intelligent",
-      description: "Every recommendation is powered by advanced AI and machine learning. We don't just track your finances – we learn from your patterns to provide smarter guidance.",
+      title: "Multi-Agent Orchestration",
+      description: "Clear boundaries and responsibilities across agents coordinated via MCP and FastAPI for predictable, testable flows.",
       color: "from-blue-500 to-blue-600"
     },
     {
       icon: Eye,
       title: "Transparent",
-      description: "Open communication builds trust. We maintain complete transparency in our processes, progress, and challenges, ensuring you're always informed.",
+      description: "Readable messages, explainable decisions, and observable logs so users and developers understand what happened and why.",
       color: "from-green-500 to-green-600"
     },
     {
       icon: Lightbulb,
-      title: "Innovative",
-      description: "We embrace cutting-edge solutions and creative approaches. Innovation isn't just about technology – it's about finding better ways to achieve your goals.",
+      title: "Open & Extensible",
+      description: "Composable components, documented APIs, and minimal coupling so new policies and agents can be added safely.",
       color: "from-purple-500 to-purple-600"
     },
     {
       icon: Heart,
       title: "User-Centric",
-      description: "Your success is our success. Every strategy, every solution, and every recommendation is designed with your specific needs and objectives at the center.",
+      description: "Empathy-first design with practical guidance, not jargon. We optimize for understanding and confidence.",
       color: "from-red-500 to-red-600"
     }
   ];
+
 
   const achievements = [
     { icon: Award, number: "10K+", label: "Users Coached" },
@@ -74,32 +77,24 @@ const PhilosophyPage = () => {
     { icon: Star, number: "98%", label: "User Satisfaction" }
   ];
 
-  const principles = [
-    {
-      title: "Excellence in Execution",
-      description: "We don't just plan – we execute with precision and dedication until objectives are achieved."
-    },
-    {
-      title: "Continuous Learning",
-      description: "Markets evolve, and so do we. We continuously adapt our strategies based on new insights and changing conditions."
-    },
-    {
-      title: "Partnership Mindset",
-      description: "We're not just service providers – we're strategic partners invested in your long-term success."
-    },
-    {
-      title: "Ethical Leadership",
-      description: "We conduct business with integrity, respect, and responsibility toward all stakeholders."
-    },
-    {
-      title: "Innovation Drive",
-      description: "We constantly seek new and better ways to solve challenges and create value for our clients."
-    },
-    {
-      title: "Results Accountability",
-      description: "We take full ownership of outcomes and are accountable for delivering the results we promise."
-    }
+    const principles = [
+    { title: "Privacy by Design", description: "Minimize sensitive data exposure, isolate responsibilities, and require explicit user consent." },
+    { title: "Transparent Orchestration", description: "Make flows and decisions observable with clear logs, statuses, and error messages." },
+    { title: "Empathetic UX", description: "Use supportive language and concrete options when users are unsure or anxious." },
+    { title: "Reliability & Safety", description: "Prefer predictable control over agents, validate inputs, and fail safely." },
+    { title: "Auditability", description: "Trace actions across agents for reviews and compliance checks." },
+    { title: "Modularity & Extensibility", description: "Add or update policies and agents without brittle cross-dependencies." }
   ];
+  const agents = [
+    { icon: Brain, title: "Master (AURA)", description: "Welcomes users, captures intent, and routes to the right agent." },
+    { icon: TrendingUp, title: "Sales (FINA)", description: "Collects loan amount, rate, tenure; explains EMI options clearly." },
+    { icon: Shield, title: "Verification (VERA)", description: "Runs PAN/Aadhaar checks and KYC via mock APIs; flags risks." },
+    { icon: Target, title: "Underwriting (CREDO)", description: "Fetches credit signals and suggests pre-approved limits and policies." },
+    { icon: CheckCircle, title: "Eligibility (ELIA)", description: "Applies policy rules to decide approval with rationale and next steps." },
+    { icon: FileText, title: "PDF Agent (DOCON)", description: "Generates the sanction letter and captures user acknowledgment." },
+  ];
+
+
 
   return (
     <div className="min-h-screen">
@@ -119,17 +114,19 @@ const PhilosophyPage = () => {
           </h1>
           
           <h2 className="text-3xl md:text-4xl font-semibold mb-8 text-muted-foreground animate-fade-in-up delay-200">
-            Clarity, Discipline, Results
+            Responsible Multi‑Agent AI for Loan Processing
           </h2>
           
           <p className="text-xl text-muted-foreground max-w-3xl leading-relaxed mb-12 animate-fade-in-up delay-400">
-            Our philosophy is built on three fundamental pillars that guide every decision, every strategy, and every action we take. These principles ensure that we deliver exceptional value while maintaining the highest standards of integrity and excellence.
+            We coordinate specialized agents via MCP and FastAPI to create a clear, safe, and empathetic loan journey: welcome and intent capture, loan discussion and EMI clarity, verification, underwriting, eligibility, and documentation. Transparency and privacy guide every step.
           </p>
 
           <div className="animate-fade-in-up delay-600">
-            <LiquidButton size="lg" className="font-medium">
-              Discover Our Approach
-              <ArrowRight className="w-5 h-5 ml-2" />
+            <LiquidButton size="lg" asChild className="font-medium">
+              <a href="/development" className="flex items-center gap-2">
+                Explore the Architecture
+                <ArrowRight className="w-5 h-5" />
+              </a>
             </LiquidButton>
           </div>
         </div>
@@ -236,6 +233,37 @@ const PhilosophyPage = () => {
         </div>
       </section>
 
+
+      {/* System Architecture Section */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16 animate-fade-in-up">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6">System Architecture</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              AURA orchestrates the flow; specialized agents handle focused responsibilities. This separation keeps decisions explainable and the experience consistent.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {agents.map((agent, index) => {
+              const Icon = agent.icon;
+              return (
+                <div 
+                  key={agent.title}
+                  className={`p-8 rounded-2xl bg-card/40 backdrop-blur-sm border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-lg group animate-fade-in-up`}
+                  style={{ animationDelay: `${350 + index * 120}ms` }}
+                >
+                  <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors duration-300">
+                    <Icon className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-3 group-hover:text-primary transition-colors">{agent.title}</h3>
+                  <p className="text-muted-foreground leading-relaxed text-sm">{agent.description}</p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
       {/* Principles Section */}
       <section className="py-20 bg-gradient-to-br from-primary/5 to-background relative overflow-hidden">
         {/* Background decoration */}
@@ -277,7 +305,7 @@ const PhilosophyPage = () => {
             </div>
             <h2 className="text-3xl md:text-4xl font-bold mb-8">Our Mission</h2>
             <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed mb-8">
-              To empower businesses with the strategic insights, operational excellence, and innovative solutions they need to achieve sustainable growth and market leadership.
+              Build trustworthy, empathetic loan experiences by coordinating specialized agents that make every step clear: discussion, verification, underwriting, eligibility, and documentation.
             </p>
             <div className="w-24 h-1 bg-gradient-to-r from-primary to-primary/60 mx-auto rounded-full"></div>
           </div>
@@ -296,14 +324,14 @@ const PhilosophyPage = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <LiquidButton size="lg" asChild className="font-medium">
-                <a href="/contact" className="flex items-center gap-2">
-                  Start Your Journey
+                <a href="/chat" className="flex items-center gap-2">
+                  Start Loan Application
                   <ArrowRight className="w-5 h-5" />
                 </a>
               </LiquidButton>
               <LiquidButton size="lg" variant="outline" asChild className="font-medium">
-                <a href="/about" className="flex items-center gap-2">
-                  Learn More About Us
+                <a href="/development" className="flex items-center gap-2">
+                  See Agent Architecture
                   <Brain className="w-5 h-5" />
                 </a>
               </LiquidButton>

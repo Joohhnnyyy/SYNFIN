@@ -18,17 +18,16 @@ export const About = () => {
             <div className="mb-6">
               <span className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium border border-primary/20">
                 <Brain className="w-4 h-4" />
-                Our Mission
+                Development
               </span>
             </div>
             
             <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              AI-driven loan processing with{" "}
-              <span className="text-primary">MCP + FastAPI orchestration</span>
+              Strong Foundations
             </h2>
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-12 leading-relaxed max-w-4xl">
-              A comprehensive multi-agent system guides customers from first chat to sanction letter: Master starts the conversation, Sales collects loan details and computes EMI, Verification validates KYC via mock APIs, Underwriting fetches credit scores, Eligibility decides approval, and the PDF Agent generates the final sanction letter.
+              Every successful expansion starts with solid groundwork and clear strategic planning.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4">
@@ -57,43 +56,43 @@ export const About = () => {
             </div>
           </div>
 
-          {/* Stats/Features Grid */}
-          <div className="grid md:grid-cols-3 gap-8 animate-fade-in-up delay-400">
-            <div className="group p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-medium">
+          {/* Pillars Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 animate-fade-in-up delay-400">
+            <div className="group p-8 bg-white rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-medium">
               <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
                 <Brain className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
-                MCP-Orchestrated Agents
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Master, Sales, Verification, Underwriting, Eligibility, and PDF Agents coordinate end-to-end.
-              </p>
+              <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">Strong Foundations</h3>
+              <p className="text-muted-foreground leading-relaxed">Every successful expansion starts with solid groundwork and clear strategic planning.</p>
             </div>
-
-            <div className="group p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-medium">
+            <div className="group p-8 bg-white rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-medium">
               <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <Database className="w-6 h-6 text-primary" />
+                <TrendingUp className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
-                FastAPI Gateway
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                A secure API layer exposes agent workflows, enabling scalable, modular loan processing.
-              </p>
+              <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">Predictable Growth</h3>
+              <p className="text-muted-foreground leading-relaxed">Systematic approaches that deliver consistent, measurable results across markets.</p>
             </div>
-
-            <div className="group p-8 bg-card/50 backdrop-blur-sm rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-medium">
+            <div className="group p-8 bg-white rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-medium">
               <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
-                <Shield className="w-6 h-6 text-primary" />
+                <ArrowRight className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">
-                Secure KYC & Documents
-              </h3>
-              <p className="text-muted-foreground leading-relaxed">
-                Mock KYC validation (PAN/Aadhaar) with automated sanction letter generation for approved loans.
-              </p>
+              <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">Clear Processes</h3>
+              <p className="text-muted-foreground leading-relaxed">Transparent methodologies that eliminate guesswork and reduce market entry risks.</p>
             </div>
+            <div className="group p-8 bg-white rounded-2xl border border-border/50 hover:border-primary/30 transition-all duration-300 hover:shadow-medium">
+              <div className="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary/20 transition-colors">
+                <TrendingUp className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-2xl font-bold mb-3 group-hover:text-primary transition-colors">Compound Value</h3>
+              <p className="text-muted-foreground leading-relaxed">Investments and strategies that build upon each other for exponential returns.</p>
+            </div>
+          </div>
+
+          {/* Quote */}
+          <div className="animate-fade-in-up delay-600 mt-16">
+            <blockquote className="text-xl md:text-2xl leading-relaxed max-w-4xl mx-auto text-center text-muted-foreground">
+              “Success in global markets isn't about luck—it's about building systems that work consistently, everywhere.”
+            </blockquote>
           </div>
         </div>
       </div>

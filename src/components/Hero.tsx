@@ -41,19 +41,17 @@ export const Hero = () => {
           <div className="mb-6 animate-fade-in-up">
             <span className="inline-flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-full text-white/90 text-sm font-medium border border-white/20">
               <Brain className="w-4 h-4 animate-pulse" />
-              AI-Driven Loan Processing
+              Development
             </span>
           </div>
           
           <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-white mb-8 leading-[0.9] tracking-tight animate-fade-in-up delay-200">
-            Synfin{" "}
-            <span className="bg-gradient-to-r from-white to-white/80 bg-clip-text text-transparent">
-              AI Loan Processing
-            </span>
+            Build once, grow often
           </h1>
           
           <p className="text-lg md:text-xl text-white/90 mb-12 max-w-2xl leading-relaxed animate-fade-in-up delay-400">
-            Multi-agent MCP + FastAPI workflow from chat to sanction letter.
+            Stronger foundations lead to predictable growth. We focus on clarity,
+            clean processes, and investments that compound over time.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up delay-600">
@@ -61,11 +59,11 @@ export const Hero = () => {
               size="xxl" 
               variant="default"
               className="font-semibold text-base group text-white"
-              onClick={handleStartJourney}
+              onClick={() => navigate('/development')}
             >
               <span className="flex items-center gap-3">
                 <TrendingUp className="w-5 h-5 group-hover:animate-pulse" />
-                START LOAN APPLICATION
+                Explore Development
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </span>
             </LiquidButton>

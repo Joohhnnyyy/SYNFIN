@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
@@ -9,6 +10,23 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from loan_advisor.services.loan_orchestrator import LoanOrchestrator
 
 app = FastAPI(title="AI Loan Processing API", version="1.0.0")
+
+# CORS for local development (frontend on localhost:8080/8082) and stable Vercel subdomain
+allowed_origins = [
+    "http://localhost:8080",
+    "http://127.0.0.1:8080",
+    "http://localhost:8082",
+    "http://127.0.0.1:8082",
+    "https://synfin.vercel.app",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=allowed_origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 orchestrator = LoanOrchestrator()
 
 class ChatRequest(BaseModel):

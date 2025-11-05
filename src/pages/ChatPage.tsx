@@ -9,7 +9,7 @@ import { LiquidButton } from "@/components/ui/liquid-glass-button";
 import { FormattedText } from "@/components/ui/formatted-text";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from "@/components/ui/select";
+// Removed Select import after consolidating agent selector UI
 import { financialApi } from "@/lib/financialApi";
 import {
   Brain,
@@ -48,6 +48,12 @@ export default function ChatPage() {
   const [input, setInput] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
   const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  // Conversation cues
+  const [awaitingSalary, setAwaitingSalary] = useState(false);
+  // Detected monthly salary indicator
+  const [detectedMonthlySalary, setDetectedMonthlySalary] = useState<number | null>(null);
   const [applicationId, setApplicationId] = useState<string | null>(null);
   const [customerId] = useState<string>(() => {
     const existing = localStorage.getItem("customer_id");
@@ -62,9 +68,25 @@ export default function ChatPage() {
   const [previewErrors, setPreviewErrors] = useState<Record<string, string>>({});
   const [htmlPreviews, setHtmlPreviews] = useState<Record<string, JSX.Element>>({});
 
+  // Auto-scroll only if the user is already near the bottom
   useEffect(() => {
-    endOfMessagesRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, isLoading]);
+    if (!messagesContainerRef.current) return;
+    if (isAtBottom) {
+      // Prefer direct scroll to avoid repeated smooth animations
+      const el = messagesContainerRef.current;
+      el.scrollTop = el.scrollHeight;
+      // Anchor as a fallback for some browsers
+      endOfMessagesRef.current?.scrollIntoView({ block: "end" });
+    }
+  }, [messages, isLoading, isAtBottom]);
+
+  // Track whether the user is near the bottom of the thread
+  const handleThreadScroll: React.UIEventHandler<HTMLDivElement> = (e) => {
+    const el = e.currentTarget;
+    const threshold = 48; // px threshold to consider "at bottom"
+    const atBottom = el.scrollHeight - el.scrollTop - el.clientHeight < threshold;
+    setIsAtBottom(atBottom);
+  };
 
   const previewLetter = async (messageId: string) => {
     if (!applicationId) {
@@ -103,15 +125,15 @@ export default function ChatPage() {
   };
 
   const quickPrompts = [
-    { agent: "Sales", text: "Calculate EMI for $20,000 at 12% for 36 months" },
+    { agent: "Sales", text: "Calculate EMI for ₹20,000 at 12% for 36 months" },
     { agent: "KYC", text: "Run PAN and Aadhaar verification" },
     { agent: "Underwriting", text: "Fetch credit score and suggest pre-approved limit" },
-    { agent: "Eligibility", text: "Check eligibility for a $20,000 loan" },
+    { agent: "Eligibility", text: "Check eligibility for a ₹20,000 loan" },
     { agent: "PDF", text: "Generate a sanction letter for approved loan" },
   ];
 
   // Attempt to extract a monthly salary amount from free-form input.
-  // Supports numbers and Indian units (lakh/crore), and month/year qualifiers.
+  // Supports numbers, Indian units (lakh/crore), thousand/K suffix, and month/year qualifiers.
   const extractMonthlySalary = (text: string): number | undefined => {
     const lower = text.toLowerCase();
     // Helper to convert a numeric string with optional lakh/crore unit into rupees
@@ -119,21 +141,34 @@ export default function ChatPage() {
       const base = parseFloat(numStr.replace(/,/g, ''));
       if (!isFinite(base)) return NaN;
       if (!unit) return base;
-      if (/crore|crores/.test(unit)) return base * 10000000;
-      if (/lakh|lakhs/.test(unit)) return base * 100000;
+      // Normalize common unit variants: lakh, lakhs, lac, lacs, lkhs
+      const u = unit.toLowerCase();
+      const isCrore = /crore|crores/.test(u);
+      const isLakh = /lakh|lakhs|lac|lacs|lkhs|lkh/.test(u);
+      const isThousand = /^(k|thousand|thousands)$/.test(u);
+      if (isCrore) return base * 10000000;
+      if (isLakh) return base * 100000;
+      if (isThousand) return base * 1000;
       return base;
     };
 
     // Case 1: Messages explicitly mentioning salary with a number
-    const salaryNum = lower.match(/salary[^\d]*(\d[\d,]*)/);
+    const salaryNum = text.match(/salary[^\d]*(\d[\d,]*)(?:\s*)(k|thousand|thousands|lakh|lakhs|lac|lacs|lkhs|lkh|crore|crores)?/i);
     if (salaryNum) {
-      const value = parseFloat(salaryNum[1].replace(/,/g, ''));
-      if (isFinite(value)) return value; // treat as monthly if unspecified
+      const value = toRupees(salaryNum[1], salaryNum[2]);
+      if (isFinite(value)) {
+        const isMonthly = /\b(month|monthly)\b/i.test(lower);
+        const isYearly = /\b(year|yearly|annum|annual)\b/i.test(lower);
+        if (isMonthly) return value;
+        if (isYearly) return Math.round(value / 12);
+        return value; // default to monthly if unspecified
+      }
     }
 
     // Case 2: Generic number + optional lakh/crore and month/year context
     // Find first amount occurrence
-    const amountMatch = text.match(/(\d[\d,]*)(?:\s*)(lakh|lakhs|crore|crores)?/i);
+    // Support tight forms like "2lakh", "2lkhs"
+    const amountMatch = text.match(/(\d[\d,]*)(?:\s*)(k|thousand|thousands|lakh|lakhs|lac|lacs|lkhs|lkh|crore|crores)?/i);
     if (amountMatch) {
       const value = toRupees(amountMatch[1], amountMatch[2]);
       if (!isFinite(value)) return undefined;
@@ -144,7 +179,7 @@ export default function ChatPage() {
     }
 
     // Case 3: Two amounts with explicit month/year hints (e.g., "2 lakh a month or 24 lakhs a year")
-    const matches = [...text.matchAll(/(\d[\d,]*)(?:\s*)(lakh|lakhs|crore|crores)?/gi)];
+    const matches = [...text.matchAll(/(\d[\d,]*)(?:\s*)(k|thousand|thousands|lakh|lakhs|lac|lacs|lkhs|lkh|crore|crores)?/gi)];
     if (matches.length >= 2) {
       // Prefer the one near "month" if present
       const indexOfMonth = lower.indexOf('month');
@@ -202,19 +237,47 @@ export default function ChatPage() {
     return n;
   };
 
+  // Extract all tenure mentions in months to detect ambiguity like "4 or 5 years".
+  const extractTenureList = (text: string): number[] => {
+    const lower = text.toLowerCase();
+    const matches = [...lower.matchAll(/(\d+)\s*(months?|month|years?|yrs?|y)/g)];
+    return matches.map((m) => {
+      const n = parseInt(m[1], 10);
+      const unit = m[2] || '';
+      if (!Number.isFinite(n)) return NaN;
+      return (/^y|^yr|year/.test(unit)) ? n * 12 : n;
+    }).filter((n) => Number.isFinite(n) && n > 0);
+  };
+
+  // Format a human name using title case, preserving hyphenated parts.
+  const formatName = (name: string): string => {
+    if (!name) return name;
+    return name
+      .split(/\s+/)
+      .map((part) => part
+        .split('-')
+        .map((seg) => seg ? seg.charAt(0).toUpperCase() + seg.slice(1).toLowerCase() : seg)
+        .join('-')
+      )
+      .join(' ');
+  };
+
   // Map message intent to backend status strings to steer agent selection server-side.
-  const intentToStatus = (text: string, currentAgent: string): string | undefined => {
+  const intentToStatus = (text: string, currentAgent: string, expectingSalary: boolean): string | undefined => {
     const ml = text.toLowerCase();
     const containsAny = (tokens: string[]) => tokens.some((t) => ml.includes(t));
     const hasPan = /[A-Z]{5}[0-9]{4}[A-Z]{1}/.test(text.toUpperCase());
     const hasAadhar = /\b\d{12}\b/.test(text);
+
+    // If we are awaiting salary, steer conversation to eligibility and avoid sales diversion
+    if (expectingSalary || currentAgent === 'Eligibility') return 'eligibility_check';
 
     // Verification intents: PAN/Aadhar/KYC
     if (containsAny(['kyc', 'pan', 'aadhar']) || hasPan || hasAadhar) return 'kyc_verification';
 
     // Sales intents: EMI/interest/tenure/amount
     if (
-      containsAny(['emi', 'interest', 'rate', 'tenure', 'months', 'years', 'loan', 'amount', 'rupees', '₹', 'lakh', 'crore'])
+      containsAny(['emi', 'interest', 'rate', 'tenure', 'months', 'years', 'loan', 'amount', 'rupees', '₹', 'lakh', 'lac', 'crore'])
     ) {
       return 'sales_discussion';
     }
@@ -241,9 +304,16 @@ export default function ChatPage() {
     const isSingleWord = /^\w+$/.test(content);
     const isGreeting = /^(hello|hi|hey|howdy|namaste|hola|bonjour)$/i.test(content.trim());
     const looksLikeBareName = /^(?:[A-Za-z][A-Za-z'.-]+)(?:\s+[A-Za-z][A-Za-z'.-]+)+$/.test(content) && !/(my name is|i am|i'm)/i.test(content);
-    const effectiveContent = (!isGreeting && looksLikeBareName && !isSingleWord)
-      ? `My name is ${content}`
+    let effectiveContent = (!isGreeting && looksLikeBareName && !isSingleWord)
+      ? `My name is ${formatName(content)}`
       : content;
+    // If the message includes a name phrase, normalize the name part to title case
+    const namePhraseMatch = effectiveContent.match(/\b(?:my name is|i am|i'm)\s+([A-Za-z][A-Za-z'.-]+(?:\s+[A-Za-z][A-Za-z'.-]+)+)/i);
+    if (namePhraseMatch) {
+      const rawName = namePhraseMatch[1];
+      const formatted = formatName(rawName);
+      effectiveContent = effectiveContent.replace(rawName, formatted);
+    }
     // Try to extract structured info so backend reliably captures intent
     // Extract loan amount only when context suggests monetary intent
     const canExtractLoan = (
@@ -252,18 +322,26 @@ export default function ChatPage() {
     );
     const looksLikeAadharOnly = /^\s*\d{12}\s*$/.test(effectiveContent);
     const loanAmount = (canExtractLoan && !looksLikeAadharOnly) ? extractLoanAmount(effectiveContent) : undefined;
-    const tenureMonths = extractTenureMonths(effectiveContent);
-    // Extract salary only if explicitly mentioned, or when talking to Eligibility
-    const allowSalaryExtraction = /\bsalary\b/i.test(effectiveContent) || activeAgent === 'Eligibility';
+    const tenureMentions = extractTenureList(effectiveContent);
+    const isUncertain = /\b(unsure|not sure|confus(?:e|ed)|uncertain|hesitant|nervous|worried|dilemma|overwhelmed)\b/i.test(effectiveContent);
+    const tenureMonths = (tenureMentions.length === 1 && !isUncertain) ? tenureMentions[0] : undefined;
+    // Extract salary if explicitly mentioned, when talking to Eligibility, or when assistant asked for salary
+    const allowSalaryExtraction = /\bsalary\b/i.test(effectiveContent) || activeAgent === 'Eligibility' || awaitingSalary;
     const monthlySalary = allowSalaryExtraction ? extractMonthlySalary(effectiveContent) : undefined;
     // If user didn't include the word "salary" but we detected an amount in an eligibility context,
     // augment the message to help backend parsing.
     const needsSalaryTag = monthlySalary && !/\bsalary\b/i.test(effectiveContent) && activeAgent === 'Eligibility';
-    const effectiveWithTag = needsSalaryTag
+    let effectiveWithTag = needsSalaryTag
       ? `${effectiveContent}. My salary is ${monthlySalary}`
       : effectiveContent;
+    // If tenure mentions are ambiguous or the user expresses uncertainty, append an explicit hint
+    const isAmbiguousTenure = (tenureMentions.length > 1) || isUncertain;
+    if (isAmbiguousTenure && !/\b(unsure|not sure|uncertain|confus(?:e|ed))\b/i.test(effectiveWithTag)) {
+      const options = tenureMentions.length ? ` (considering ${tenureMentions.map((n) => `${n} months`).join(' or ')})` : '';
+      effectiveWithTag = `${effectiveWithTag}. I am unsure about the tenure${options}`;
+    }
     const agentPrefixed = `[Agent: ${activeAgent}] ${effectiveWithTag}`;
-    const intentStatus = intentToStatus(effectiveWithTag, activeAgent);
+    const intentStatus = intentToStatus(effectiveWithTag, activeAgent, awaitingSalary);
 
     try {
       const userMsg: ChatMessage = {
@@ -293,6 +371,11 @@ export default function ChatPage() {
         setApplicationId(apiResponse.application_id);
       }
 
+      // Persist detected monthly salary for UI confirmation chip
+      if (typeof monthlySalary === 'number' && monthlySalary > 0) {
+        setDetectedMonthlySalary(monthlySalary);
+      }
+
       const assistantMsg: ChatMessage = {
         id: Date.now().toString() + "-a",
         role: "assistant",
@@ -301,6 +384,13 @@ export default function ChatPage() {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, assistantMsg]);
+      // If assistant asks for salary, set awaitingSalary cue
+      if (/monthly\s+salary|provide\s+your\s+salary|salary\b/i.test(assistantMsg.content)) {
+        setAwaitingSalary(true);
+      } else {
+        // Clear on non-salary prompts to avoid sticky state
+        setAwaitingSalary(false);
+      }
       setInput("");
     } catch (error) {
       const err = error as any;
@@ -323,6 +413,10 @@ export default function ChatPage() {
           if (!applicationId && retryResponse.application_id) {
             setApplicationId(retryResponse.application_id);
           }
+          // Persist detected monthly salary for UI confirmation chip on retry
+          if (typeof monthlySalary === 'number' && monthlySalary > 0) {
+            setDetectedMonthlySalary(monthlySalary);
+          }
           const assistantMsg: ChatMessage = {
             id: Date.now().toString() + "-a",
             role: "assistant",
@@ -331,6 +425,11 @@ export default function ChatPage() {
             timestamp: new Date(),
           };
           setMessages((prev) => [...prev, assistantMsg]);
+          if (/monthly\s+salary|provide\s+your\s+salary|salary\b/i.test(assistantMsg.content)) {
+            setAwaitingSalary(true);
+          } else {
+            setAwaitingSalary(false);
+          }
           setInput("");
         } catch (retryError) {
           const assistantMsg: ChatMessage = {
@@ -415,7 +514,7 @@ export default function ChatPage() {
         {/* Page Title */}
         <div className="mb-6">
           <h1 className="text-4xl sm:text-5xl font-bold text-slate-800">Unified AI Loan Chat</h1>
-          <p className="mt-2 text-slate-600">Chat like ChatGPT with quick links to agents: Master, Sales, KYC, Underwriting, Eligibility, and PDF.</p>
+          <p className="mt-2 text-slate-600">Quick links to agents: Master, Sales, KYC, Underwriting, Eligibility, and PDF.</p>
         </div>
 
         {/* Top Agent Chips */}
@@ -444,16 +543,6 @@ export default function ChatPage() {
                   <Badge variant="outline" className="ml-2">{activeAgent}</Badge>
                 </CardTitle>
                 <div className="flex items-center gap-3">
-                  <Select value={activeAgent} onValueChange={setActiveAgent}>
-                    <SelectTrigger className="w-40">
-                      <SelectValue placeholder="Select agent" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {agents.map(({ key, label }) => (
-                        <SelectItem key={key} value={key}>{label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
                   <Button variant="outline" size="sm" onClick={() => { setMessages([]); setInput(""); setApplicationId(null); }}>
                     New Chat
                   </Button>
@@ -462,8 +551,21 @@ export default function ChatPage() {
               <CardDescription>Converse with the AI across agents. The active agent tags your message.</CardDescription>
             </CardHeader>
             <CardContent>
+              {/* Detected Monthly Salary Chip */}
+              {typeof detectedMonthlySalary === 'number' && detectedMonthlySalary > 0 && (
+                <div className="mb-3 flex items-center gap-2">
+                  <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+                    Detected monthly salary: ₹{Number(detectedMonthlySalary).toLocaleString()}
+                  </Badge>
+                  <span className="text-xs text-gray-500">Type “My monthly salary is …” to update.</span>
+                </div>
+              )}
               {/* Thread */}
-              <div className="space-y-5 mb-4 h-[60vh] overflow-y-auto bg-gray-50 rounded-xl p-6">
+              <div
+                className="space-y-5 mb-4 h-[60vh] overflow-y-auto bg-gray-50 rounded-xl p-6"
+                ref={messagesContainerRef}
+                onScroll={handleThreadScroll}
+              >
                 {messages.length === 0 ? (
                   <div className="text-center py-12">
                     <div className="w-20 h-20 mx-auto mb-6 bg-primary/10 rounded-full flex items-center justify-center">
@@ -582,35 +684,22 @@ export default function ChatPage() {
               </CardHeader>
               <CardContent>
                 <Input
-                  placeholder="e.g., Salaried, $60k/year, requesting $20k over 36 months"
+                  placeholder="e.g., Salaried, ₹60k/year, requesting ₹20k over 36 months"
                   value={userContext}
                   onChange={(e) => setUserContext(e.target.value)}
+                  onBlur={(e) => {
+                    const val = e.target.value.trim();
+                    const looksLikeNameOnly = /^(?:[A-Za-z][A-Za-z'.-]+)(?:\s+[A-Za-z][A-Za-z'.-]+)+$/.test(val);
+                    if (looksLikeNameOnly) {
+                      setUserContext(formatName(val));
+                    }
+                  }}
                   className="text-base py-3"
                 />
               </CardContent>
             </Card>
 
-            {/* Agent Details */}
-            <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg">Agents</CardTitle>
-                <CardDescription>Select an agent above; see roles below.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {agents.map(({ key, label, icon: Icon, desc }) => (
-                  <div key={key} className={`flex items-start gap-3 p-3 rounded-lg border ${activeAgent === key ? 'border-primary/40 bg-primary/5' : 'border-gray-200 bg-white'}`}>
-                    <div className="p-2 bg-primary/10 rounded-md"><Icon className="w-4 h-4 text-primary" /></div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <p className="font-medium text-gray-800">{label}</p>
-                        {activeAgent === key && <Badge variant="outline" className="text-xs">Active</Badge>}
-                      </div>
-                      <p className="text-sm text-gray-600">{desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+            {/* Removed duplicate Agent Details list to avoid redundant controls */}
 
             {/* Backend Status */}
             <Card className="shadow-lg border-0 bg-white/80 backdrop-blur-sm">

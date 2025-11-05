@@ -1,7 +1,7 @@
-# Savify Deployment URLs
+# SYNFIN Deployment URLs
 
 ## Frontend (Vercel)
-- **URL**: https://savify.vercel.app
+- **URL**: https://synfin.vercel.app
 - **GitHub Repository**: https://github.com/Joohhnnyyy/savify
 - **Branch**: main
 
@@ -35,6 +35,6 @@
 
 ## Testing the Integration
 To verify the integration is working correctly:
-1. Visit https://savify.vercel.app
+1. Visit https://synfin.vercel.app
 2. Navigate to the Financial Dashboard
 3. The frontend should successfully connect to the backend API at https://ai-loan-advisor-zeta.vercel.app

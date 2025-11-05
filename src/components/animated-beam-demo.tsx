@@ -54,21 +54,23 @@ export function AnimatedBeamDemo() {
   const div6Ref = useRef<HTMLDivElement>(null);
   const div7Ref = useRef<HTMLDivElement>(null);
   const div9Ref = useRef<HTMLDivElement>(null);
+  const div8Ref = useRef<HTMLDivElement>(null);
+  const div10Ref = useRef<HTMLDivElement>(null);
 
   return (
     <div
-      className="relative flex h-[700px] w-full items-center justify-center overflow-hidden rounded-lg border bg-background p-10 md:shadow-xl"
+      className="relative flex h-[820px] w-full items-center justify-center overflow-visible rounded-lg border bg-background p-10 md:shadow-xl"
       ref={containerRef}
     >
-      <div className="flex size-full flex-col max-w-4xl max-h-[500px] items-stretch justify-between gap-8 -mt-8">
+      <div className="flex size-full flex-col max-w-4xl max-h-none items-stretch justify-between gap-8 -mt-8">
         <div className="flex flex-row items-center justify-between">
           <div className="flex flex-col items-center gap-2">
             <Circle ref={div1Ref}>
               <Icons.agentBot />
             </Circle>
-            <span className="text-xs font-medium text-gray-600">Expenditure Agent</span>
+            <span className="text-xs font-medium text-gray-600">Sales Agent (FINA)</span>
           </div>
-          <ServiceCard ref={div5Ref} title="Budget Planning">
+          <ServiceCard ref={div5Ref} title="Chat Onboarding">
             <Icons.budgetPlanning />
           </ServiceCard>
         </div>
@@ -77,15 +79,15 @@ export function AnimatedBeamDemo() {
             <Circle ref={div2Ref}>
               <Icons.agentBot />
             </Circle>
-            <span className="text-xs font-medium text-gray-600">Insights Agent</span>
+            <span className="text-xs font-medium text-gray-600">Verification Agent (VERA)</span>
           </div>
           <div className="flex flex-col items-center gap-2">
             <Circle ref={div4Ref} className="size-20">
               <Icons.robotMaster />
             </Circle>
-            <span className="text-xs font-medium text-gray-600">Master</span>
+            <span className="text-xs font-medium text-gray-600">Master (AURA)</span>
           </div>
-          <ServiceCard ref={div6Ref} title="Investment Advice">
+          <ServiceCard ref={div6Ref} title="EMI Calculation">
             <Icons.investmentAdvice />
           </ServiceCard>
         </div>
@@ -94,14 +96,27 @@ export function AnimatedBeamDemo() {
             <Circle ref={div3Ref}>
               <Icons.agentBot />
             </Circle>
-            <span className="text-xs font-medium text-gray-600">Financial Agent</span>
+            <span className="text-xs font-medium text-gray-600">Underwriting Agent (CREDO)</span>
           </div>
-          <ServiceCard ref={div7Ref} title="Tax Planning">
+          <ServiceCard ref={div7Ref} title="KYC Verification">
+            <Icons.taxPlanning />
+          </ServiceCard>
+        </div>
+
+        {/* Additional row for Eligibility Agent */}
+        <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-col items-center gap-2">
+            <Circle ref={div8Ref}>
+              <Icons.agentBot />
+            </Circle>
+            <span className="text-xs font-medium text-gray-600">Eligibility Agent (ELIA)</span>
+          </div>
+          <ServiceCard ref={div10Ref} title="Eligibility Decision">
             <Icons.taxPlanning />
           </ServiceCard>
         </div>
         <div className="flex flex-row items-center justify-end">
-          <ServiceCard ref={div9Ref} title="Financial Health">
+          <ServiceCard ref={div9Ref} title="Sanction Letter">
             <Icons.financialHealth />
           </ServiceCard>
         </div>
@@ -144,6 +159,21 @@ export function AnimatedBeamDemo() {
         toRef={div7Ref}
         curvature={75}
         endYOffset={10}
+      />
+
+      <AnimatedBeam
+        containerRef={containerRef}
+        fromRef={div8Ref}
+        toRef={div4Ref}
+        curvature={50}
+        endYOffset={15}
+      />
+      <AnimatedBeam
+        containerRef={containerRef}
+        fromRef={div4Ref}
+        toRef={div10Ref}
+        curvature={-100}
+        endYOffset={-20}
       />
       <AnimatedBeam
         containerRef={containerRef}

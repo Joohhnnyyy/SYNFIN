@@ -117,7 +117,7 @@ const DevelopmentPage = () => {
         
         <div className="container mx-auto px-6 relative z-10">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight tracking-wider animate-fade-in-up">
-            <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">architecture</span>
+            <span className="bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">Architecture</span>
           </h1>
           
           <h2 className="text-3xl md:text-4xl font-semibold mb-8 text-muted-foreground animate-fade-in-up delay-200">
