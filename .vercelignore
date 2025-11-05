@@ -49,3 +49,4 @@ README.md
 
 # Lock files (keep package-lock.json for consistent builds)
 bun.lockb
+# Redeploy trigger: harmless comment appended to refresh Vercel build
