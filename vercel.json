@@ -3,6 +3,7 @@
   "outputDirectory": "dist",
   "framework": "vite",
   "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://ai-loan-advisor-zeta.vercel.app/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
@@ -17,7 +18,7 @@
     }
   ],
   "env": {
-    "VITE_API_URL": "https://ai-loan-advisor-zeta.vercel.app",
+    "VITE_API_URL": "/api",
     "VITE_SUPABASE_PROJECT_ID": "slppeaykjqepuyyxtaqt"
   },
   "installCommand": "npm install"
