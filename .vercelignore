@@ -42,11 +42,10 @@ README.md
 .eslintrc*
 .prettierrc*
 # Allow Vite and TypeScript configs for proper builds on Vercel
-# tsconfig*.json
-# vite.config.ts
-# tailwind.config.ts
-# postcss.config.js
-# components.json
+# tsconfig files are needed by tooling and Vite plugins
+# vite.config.ts defines aliases like '@' used across the project
+# tailwind and postcss configs are required for CSS processing
+# components.json is used for shadcn UI aliases
 
 # Lock files (keep package-lock.json for consistent builds)
 bun.lockb
