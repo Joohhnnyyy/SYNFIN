@@ -655,6 +655,12 @@ export default function ChatPage() {
                   placeholder={`Message for ${activeAgent}...`}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      sendMessage();
+                    }
+                  }}
                   className="min-h-[80px]"
                 />
                 <LiquidButton 
