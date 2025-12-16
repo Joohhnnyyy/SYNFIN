@@ -16,7 +16,7 @@ export default defineConfig({
     proxy: {
       "/api": {
         // Forward dev API calls to the provided backend URL
-        target: "https://ai-loan-advisor-zeta.vercel.app",
+        target: "https://tw40kgzl-8000.inc1.devtunnels.ms",
         changeOrigin: true,
         secure: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
