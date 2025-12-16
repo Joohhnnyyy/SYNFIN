@@ -97,6 +97,26 @@ export default function ChatPage() {
         setPreviewUrls((prev) => ({ ...prev, [messageId]: mUrl }));
         return;
       }
+
+      // Check for relative path pattern from backend response
+      const relativeMatch = m.match(/sanction_letters\/sanction_letter_([a-f0-9-]+)\.pdf/);
+      if (relativeMatch) {
+        const appId = relativeMatch[1];
+        try {
+          const blob = await financialApi.getSanctionLetter(appId);
+          const url = URL.createObjectURL(blob);
+          setPreviewUrls((prev) => ({ ...prev, [messageId]: url }));
+          setPreviewErrors((prev) => {
+            const next = { ...prev };
+            delete next[messageId];
+            return next;
+          });
+        } catch (e: any) {
+          console.error("Failed to fetch sanction letter:", e);
+          setPreviewErrors((prev) => ({ ...prev, [messageId]: "Failed to load sanction letter: " + e.message }));
+        }
+        return;
+      }
     }
     if (!applicationId) {
       setPreviewErrors((prev) => ({ ...prev, [messageId]: 'No application ID available' }));
