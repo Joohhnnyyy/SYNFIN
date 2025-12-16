@@ -75,7 +75,7 @@ export const Footer = () => {
           <div className="flex flex-col md:flex-row justify-between items-center gap-6">
             {/* Copyright */}
             <p className="text-sm text-primary-foreground/80 animate-fade-in-up delay-600">
-              © 2025 Savify. All rights reserved.
+              © 2025 Synfin. All rights reserved.
             </p>
             
             {/* Social Links */}

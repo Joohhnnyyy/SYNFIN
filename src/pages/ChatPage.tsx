@@ -89,6 +89,15 @@ export default function ChatPage() {
   };
 
   const previewLetter = async (messageId: string) => {
+    const msg = messages.find((m) => m.id === messageId);
+    if (msg && msg.role !== 'user') {
+      const m = msg.content;
+      const mUrl = (m.match(/https?:\/\/[^\s"')]+/)?.[0] || '').trim();
+      if (mUrl) {
+        setPreviewUrls((prev) => ({ ...prev, [messageId]: mUrl }));
+        return;
+      }
+    }
     if (!applicationId) {
       setPreviewErrors((prev) => ({ ...prev, [messageId]: 'No application ID available' }));
       return;
@@ -119,7 +128,7 @@ export default function ChatPage() {
         );
         setHtmlPreviews((prev) => ({ ...prev, [messageId]: html }));
       } catch (_) {
-        // leave error surfaced
+        return;
       }
     }
   };
