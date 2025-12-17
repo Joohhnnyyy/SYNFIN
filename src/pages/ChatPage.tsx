@@ -62,11 +62,17 @@ export default function ChatPage() {
     localStorage.setItem("customer_id", generated);
     return generated;
   });
-  const [healthStatus, setHealthStatus] = useState<string>("Not checked");
+  const [healthStatus, setHealthStatus] = useState<string>("Checking...");
+  const [serverStatus, setServerStatus] = useState<'checking' | 'spinning_up' | 'active' | 'offline'>('checking');
   const [isHealthLoading, setIsHealthLoading] = useState(false);
   const [previewUrls, setPreviewUrls] = useState<Record<string, string>>({});
   const [previewErrors, setPreviewErrors] = useState<Record<string, string>>({});
   const [htmlPreviews, setHtmlPreviews] = useState<Record<string, JSX.Element>>({});
+
+  // Check backend health on mount to detect cold start
+  useEffect(() => {
+    checkBackend();
+  }, []);
 
   // Auto-scroll only if the user is already near the bottom
   useEffect(() => {
@@ -504,16 +510,60 @@ export default function ChatPage() {
 
   const checkBackend = async () => {
     setIsHealthLoading(true);
+    setServerStatus('checking');
+    
+    // If request takes > 1.5s, assume cold start (spinning up)
+    const spinTimer = setTimeout(() => {
+      setServerStatus('spinning_up');
+    }, 1500);
+
     try {
       const res = await financialApi.healthCheck();
       const status = res.status || res.message || 'unknown';
       setHealthStatus(`Online (${status})`);
+      setServerStatus('active');
     } catch (e) {
       const err = e as any;
       setHealthStatus(`Offline (${err?.message || 'error'})`);
+      setServerStatus('offline');
     } finally {
+      clearTimeout(spinTimer);
       setIsHealthLoading(false);
     }
+  };
+
+
+
+  const renderServerStatus = () => {
+    if (serverStatus === 'spinning_up') {
+      return (
+        <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg flex items-center gap-3 text-amber-800 animate-in fade-in slide-in-from-top-4 duration-500">
+          <Loader2 className="w-5 h-5 animate-spin text-amber-600" />
+          <div>
+            <p className="font-semibold text-sm">Server is waking up...</p>
+            <p className="text-xs opacity-90">This is a Render free tier cold start. It may take up to 60 seconds.</p>
+          </div>
+        </div>
+      );
+    }
+    if (serverStatus === 'active') {
+      return (
+        <div className="mb-4 p-2 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2 text-green-700 animate-in fade-in slide-in-from-top-4 duration-500">
+          <div className="p-1 bg-green-100 rounded-full"><CheckCircle className="w-4 h-4 text-green-600" /></div>
+          <span className="font-medium text-sm">Server is Active</span>
+        </div>
+      );
+    }
+    if (serverStatus === 'offline') {
+       return (
+        <div className="mb-4 p-2 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2 text-red-700">
+           <div className="p-1 bg-red-100 rounded-full"><Shield className="w-4 h-4 text-red-600" /></div>
+           <span className="font-medium text-sm">Server is Offline</span>
+           <Button variant="outline" size="sm" className="ml-auto h-7 text-xs border-red-200 hover:bg-red-100 text-red-700" onClick={checkBackend}>Retry</Button>
+        </div>
+      );
+    }
+    return null;
   };
 
   return (
@@ -560,6 +610,7 @@ export default function ChatPage() {
               <CardDescription>Converse with the AI across agents. The active agent tags your message.</CardDescription>
             </CardHeader>
             <CardContent>
+              {renderServerStatus()}
               {/* Detected Monthly Salary Chip */}
               {typeof detectedMonthlySalary === 'number' && detectedMonthlySalary > 0 && (
                 <div className="mb-3 flex items-center gap-2">
